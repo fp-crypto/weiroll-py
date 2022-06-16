@@ -11,7 +11,7 @@ from brownie.convert.utils import get_type_strings
 from brownie.network.contract import OverloadedMethod
 from hexbytes import HexBytes
 
-from .web3_helpers import MAX_UINT256
+MAX_UINT256 = 2**256-1
 
 # TODO: real types?
 Value = namedtuple("Value", "param")
@@ -39,6 +39,12 @@ def simple_type_strings(inputs) -> tuple[Optional[list[str]], Optional[list[int]
 
             simple_inputs.extend([m.group(1)] * size)
             simple_sizes.append(size)
+
+        if i.startswith("(") and i.endswith(")"):
+            types = i[1:-1].split(",")
+
+            simple_inputs.extend(types)
+            simple_sizes.append(len(types))
         else:
             simple_inputs.append(i)
             simple_sizes.append(1)

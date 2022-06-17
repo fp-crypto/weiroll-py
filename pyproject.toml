@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "weiroll"
+version = "0.0.1"
+description = "Build complex Gnosis Safe transactions and safely preview them in a forked environment."
+authors = ["fp-crypto <fp@no.email.com>"]
+license = "MIT"
+repository = "https://github.com/fp-crypto/weiroll-py"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+ape_safe = "0.5.0"
+eth-brownie = "1.19.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

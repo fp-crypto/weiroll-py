@@ -24,6 +24,8 @@ def simple_type_strings(inputs) -> tuple[Optional[list[str]], Optional[list[int]
 
     related: https://github.com/weiroll/weiroll.js/pull/34
     """
+
+
     if not inputs:
         return None, None
 
@@ -687,7 +689,7 @@ class WeirollPlanner:
                         hexConcat(
                             command.call.fragment.signature,
                             flags,
-                            [0, 0, 0, 0, 0, 0],
+                            [0xFF] * 6,
                             ret,
                             command.call.contract.address,
                         ),

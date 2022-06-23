@@ -5,8 +5,9 @@ from ape_safe import ApeSafe
 
 safe = ApeSafe("0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7")
 
-def _tenderly_fork(web3):
+def _tenderly_fork():
     import requests
+    import brownie
 
     fork_base_url = "https://simulate.yearn.network/fork"
     payload = {"network_id": "1"}
@@ -14,13 +15,14 @@ def _tenderly_fork(web3):
     fork_id = resp.json()["simulation_fork"]["id"]
     fork_rpc_url = f"https://rpc.tenderly.co/fork/{fork_id}"
     print(fork_rpc_url)
-    tenderly_provider = web3.HTTPProvider(fork_rpc_url, {"timeout": 600})
-    web3.provider = tenderly_provider
+    tenderly_provider = safe.w3.HTTPProvider(fork_rpc_url, {"timeout": 600})
+    safe.w3.provider = tenderly_provider
+    brownie.web3.provider = tenderly_provider
     print(f"https://dashboard.tenderly.co/yearn/yearn-web/fork/{fork_id}")
 
 
 def weiroll_example():
-    #_tenderly_fork(safe.w3)
+    #_tenderly_fork()
 
     weth = safe.contract("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
     crvseth = safe.contract("0xc5424B857f758E906013F3555Dad202e4bdB4567")
@@ -55,7 +57,6 @@ def weiroll_example():
     ))
 
     susd_bal = planner.add(susd.balanceOf(safe.address))
-    print("susd", susd_bal)
     planner.add(susd.approve(sushi_router_w.address, susd_bal))
     planner.add(sushi_router_w.swapExactTokensForTokens(
         susd_bal,
@@ -65,26 +66,22 @@ def weiroll_example():
         2**256-1
     ))
 
-    #seth_bal = planner.add(seth.balanceOf(safe.address))
-    #planner.add(seth.approve(univ3_router_w.address, seth_bal))
-    #planner.add(univ3_router_w.exactInputSingle(
-    #    (
-    #        seth.address,
-    #        weth.address,
-    #        500,
-    #        safe.address,
-    #        2**256-1,
-    #        100000,
-    #        0,
-    #        0
-    #    )
-    #))
+    seth_bal = planner.add(seth.balanceOf(safe.address))
+    planner.add(seth.approve(univ3_router_w.address, seth_bal))
+    planner.add(univ3_router_w.exactInputSingle(
+        (
+            seth.address,
+            weth.address,
+            500,
+            safe.address,
+            2**256-1,
+            seth_bal,
+            0,
+            0
+        )
+    ))
 
     cmds, state = planner.plan()
-
-    print(str(cmds))
-    print(str(state))
-
     tx_input = weiroll_vm.execute.encode_input(cmds, state)
 
     safe_tx = safe.build_multisig_tx(weiroll_vm.address, 0, tx_input, SafeOperation.DELEGATE_CALL.value, safe.pending_nonce())

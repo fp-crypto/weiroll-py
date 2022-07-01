@@ -112,18 +112,7 @@ class FunctionFragment:
         # split up complex types into 32 byte chunks that weiroll state can handle
         args = simple_args(self.simple_sizes, args)
 
-        encoded_args = []
-
-        for i, arg in enumerate(args):
-            param = self.simple_inputs[i]
-            if isinstance(arg, list) and isDynamicType(param) and any(isValue(ele) for ele in arg):
-                # handle special case of dynamic array containing special values (eg return values)
-                encoded_args.append(encodeArg(len(arg), 'uint256'))
-                encoded_args.extend([encodeArg(ele, param.split('[')[0]) for ele in arg])
-            else:
-                encoded_args.append(encodeArg(arg, param))
-
-        return encoded_args
+        return [encodeArg(arg, self.simple_inputs[i]) for (i, arg) in enumerate(args)]
 
 
 class StateValue:

@@ -225,7 +225,7 @@ class FunctionCall:
 
 # TODO: this is probably not an accurate port. think about this more
 def isDynamicType(param) -> bool:
-    if param.endswith("]"):
+    if param.endswith("[]"):
         param = "array"
     if param.startswith("tuple"):
         param = "tuple"

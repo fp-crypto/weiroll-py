@@ -1,4 +1,4 @@
-from brownie import Executor, interface, accounts, Contract
+from brownie import TestableVM, interface, accounts, Contract, convert
 from weiroll import WeirollContract, WeirollPlanner, hexConcat
 from gnosis.safe import SafeOperation
 from ape_safe import ApeSafe
@@ -28,7 +28,7 @@ def weiroll_example():
     crvseth = safe.contract("0xc5424B857f758E906013F3555Dad202e4bdB4567")
     susd = safe.contract("0x57Ab1ec28D129707052df4dF418D58a2D46d5f51")
 
-    weiroll_vm = accounts[0].deploy(Executor) 
+    weiroll_vm = accounts[0].deploy(TestableVM) 
     weiroll = WeirollContract
     planner = WeirollPlanner(safe)
     yvweth = weiroll.createContract(Contract("0x5120FeaBd5C21883a4696dBCC5D123d6270637E9"))
@@ -39,13 +39,9 @@ def weiroll_example():
     sushi_router_w = weiroll.createContract(Contract("0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F"))
     univ3_router_w = weiroll.createContract(Contract("0xE592427A0AEce92De3Edee1F18E0157C05861564"))
 
-    #planner.call(Contract(weth.address), "approve", wbtc.address, 1)
-    #planner.call(Contract(susd.address), "transfer", wbtc.address, int(2e18))
-
     planner.call(yvweth.brownieContract, "withdraw(uint256)", int(1e18))
     
     weth_bal = planner.add(weth.balanceOf(safe.address))
-    #planner.add(weth.transfer(wbtc.address, weth_bal))
 
     planner.add(weth.approve(sushi_router_w.address, weth_bal))
     planner.add(sushi_router_w.swapExactTokensForTokens(

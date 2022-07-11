@@ -34,15 +34,13 @@ def simple_type_strings(inputs) -> tuple[Optional[list[str]], Optional[list[int]
     for i in inputs:
         if i.endswith("]") and not i.endswith("[]"):
             # fixed size array. cut it up
-            # TODO: i've seen a warning about "\[" is not valid, but i get errors without
             m = re.match(r"([a-z0-9]+)\[([0-9]+)\]", i)
 
             size = int(m.group(2))
 
             simple_inputs.extend([m.group(1)] * size)
             simple_sizes.append(size)
-
-        if i.startswith("(") and i.endswith(")") and not isDynamicType(i):
+        elif i.startswith("(") and i.endswith(")") and not isDynamicType(i):
             types = i[1:-1].split(",")
 
             simple_inputs.extend(types)
@@ -229,7 +227,6 @@ def isDynamicType(param) -> bool:
     if param.endswith("[]"):
         param = "array"
     if param.startswith("(") and param.endswith(")") and any(dynamic_type in param[1:-1] for dynamic_type in dynamic_types):
-        print(param)
         param = "tuple"
     return param in dynamic_types
 

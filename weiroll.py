@@ -42,7 +42,7 @@ def simple_type_strings(inputs) -> tuple[Optional[list[str]], Optional[list[int]
             simple_inputs.extend([m.group(1)] * size)
             simple_sizes.append(size)
 
-        if i.startswith("(") and i.endswith(")"):
+        if i.startswith("(") and i.endswith(")") and not isDynamicType(i):
             types = i[1:-1].split(",")
 
             simple_inputs.extend(types)
@@ -225,11 +225,13 @@ class FunctionCall:
 
 # TODO: this is probably not an accurate port. think about this more
 def isDynamicType(param) -> bool:
+    dynamic_types = ["string", "bytes", "array", "tuple"]
     if param.endswith("[]"):
         param = "array"
-    if param.startswith("tuple"):
+    if param.startswith("(") and param.endswith(")") and any(dynamic_type in param[1:-1] for dynamic_type in dynamic_types):
+        print(param)
         param = "tuple"
-    return param in ["string", "bytes", "array", "tuple"]
+    return param in dynamic_types
 
 
 def encodeArg(arg, param):

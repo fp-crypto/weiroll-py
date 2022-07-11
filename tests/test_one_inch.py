@@ -10,7 +10,7 @@ def test_one_inch():
 
     vm = TestableVM.deploy({"from": whale})
     weth.transfer(vm.address, Wei("10 ether"), {"from": whale})
-    assert False
+    #assert False
     swap_url = "https://api.1inch.io/v4.0/1/swap"
     r = requests.get(swap_url, params={
         "fromTokenAddress": weth.address,
@@ -40,6 +40,4 @@ def test_one_inch():
     weiroll_tx = vm.execute(cmds, state, {"from": whale, "gas_limit": 8_000_000, "gas_price": 0})
 
     # This works fine
-    assert crv.balanceOf(vm) == 0
-    regular_tx = one_inch.swap(*params, {"from": vm, "gas_limit": 8_000_000, "gas_price": 0})
     assert crv.balanceOf(vm) > 0

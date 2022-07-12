@@ -1,1 +1,0 @@
-eth-brownie==v1.17

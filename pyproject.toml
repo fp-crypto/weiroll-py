@@ -1,15 +1,16 @@
 [tool.poetry]
-name = "weiroll"
-version = "0.0.1"
-description = "Build complex Gnosis Safe transactions and safely preview them in a forked environment."
-authors = ["fp-crypto <fp@no.email.com>"]
+name = "weiroll-py"
+version = "0.1.0"
+description = "Build weiroll transactions with brownie"
+authors = ["FP <FP@no-email.com>"]
 license = "MIT"
-repository = "https://github.com/fp-crypto/weiroll-py"
-readme = "README.md"
+packages = [
+    { include = "./weiroll.py" },
+]
 
 [tool.poetry.dependencies]
-ape_safe = "0.5.0"
-eth-brownie = "1.19.0"
+python = ">=3.9,<3.10"
+eth-brownie = "^v1.17"
 
 [tool.poetry.dev-dependencies]
 

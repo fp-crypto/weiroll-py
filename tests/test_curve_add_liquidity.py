@@ -24,7 +24,8 @@ def test_curve_add_liquidity():
     w_curve_pool = WeirollContract.createContract(curve_pool)
 
     planner.add(w_dai.approve(w_curve_pool.address, 2**256-1))
-    planner.add(w_curve_pool.add_liquidity([Wei("10 ether"), 0, 0], 0))
+    w_dai_balance = planner.add(w_dai.balanceOf(vm.address))
+    planner.add(w_curve_pool.add_liquidity([w_dai_balance, 0, 0], 0))
 
     cmds, state = planner.plan()
     weiroll_tx = vm.execute(cmds, state, {"from": whale, "gas_limit": 8_000_000, "gas_price": 0})

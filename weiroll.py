@@ -221,14 +221,8 @@ class FunctionCall:
         )
 
 
-# TODO: this is probably not an accurate port. think about this more
 def isDynamicType(param) -> bool:
-    dynamic_types = ["string", "bytes", "array", "tuple"]
-    if param.endswith("[]"):
-        param = "array"
-    if param.startswith("(") and param.endswith(")") and any(dynamic_type in param[1:-1] for dynamic_type in dynamic_types):
-        param = "tuple"
-    return param in dynamic_types
+    return eth_abi.grammar.parse(param).is_dynamic
 
 
 def encodeArg(arg, param):

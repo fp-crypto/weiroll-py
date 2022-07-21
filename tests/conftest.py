@@ -3,8 +3,8 @@ from brownie import config, Contract, network
 import requests
 from weiroll import WeirollContract
 
-#@pytest.fixture(scope="session", autouse=True)
-#def _tenderly_fork():
+# @pytest.fixture(scope="session", autouse=True)
+# def _tenderly_fork():
 #    import requests
 #    import brownie
 #
@@ -25,19 +25,60 @@ def shared_setup(fn_isolation):
     pass
 
 
+@pytest.fixture(scope="session")
+def alice(accounts):
+    yield accounts[0]
+
+
 @pytest.fixture(scope="module")
-def weiroll_vm(accounts, TestableVM):
-    vm = accounts[0].deploy(TestableVM)
+def weiroll_vm(alice, TestableVM):
+    vm = alice.deploy(TestableVM)
     yield vm
 
 
 @pytest.fixture(scope="module")
-def math(accounts, Math):
-    math_bronwie = accounts[0].deploy(Math)
-    yield WeirollContract.createLibrary(math_bronwie)
+def math(alice, Math):
+    math_brownie = alice.deploy(Math)
+    yield WeirollContract.createLibrary(math_brownie)
 
 
 @pytest.fixture(scope="module")
-def strings(accounts, Strings):
-    strings_brownie = accounts[0].deploy(Strings)
+def testContract(alice, TestContract):
+    brownie_contract = alice.deploy(TestContract)
+    yield WeirollContract.createLibrary(brownie_contract)
+
+
+@pytest.fixture(scope="module")
+def strings(alice, Strings):
+    strings_brownie = alice.deploy(Strings)
     yield WeirollContract.createLibrary(strings_brownie)
+
+
+@pytest.fixture(scope="module")
+def subplanContract(alice, TestSubplan):
+    brownie_contract = alice.deploy(TestSubplan)
+    yield WeirollContract.createLibrary(brownie_contract)
+
+
+@pytest.fixture(scope="module")
+def multiSubplanContract(alice, TestMultiSubplan):
+    brownie_contract = alice.deploy(TestMultiSubplan)
+    yield WeirollContract.createLibrary(brownie_contract)
+
+
+@pytest.fixture(scope="module")
+def badSubplanContract(alice, TestBadSubplan):
+    brownie_contract = alice.deploy(TestBadSubplan)
+    yield WeirollContract.createLibrary(brownie_contract)
+
+
+@pytest.fixture(scope="module")
+def multiStateSubplanContract(alice, TestMultiStateSubplan):
+    brownie_contract = alice.deploy(TestMultiStateSubplan)
+    yield WeirollContract.createLibrary(brownie_contract)
+
+
+@pytest.fixture(scope="module")
+def readonlySubplanContract(alice, TestReadonlySubplan):
+    brownie_contract = alice.deploy(TestReadonlySubplan)
+    yield WeirollContract.createLibrary(brownie_contract)

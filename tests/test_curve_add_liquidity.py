@@ -10,7 +10,7 @@ def test_curve_add_liquidity(weiroll_vm):
 
     # regular way
     assert three_crv.balanceOf(whale) == 0
-    dai.approve(curve_pool.address, 2**256-1, {"from": whale})
+    dai.approve(curve_pool.address, 2 ** 256 - 1, {"from": whale})
     curve_pool.add_liquidity([Wei("10 ether"), 0, 0], 0, {"from": whale})
     assert three_crv.balanceOf(whale) > 0
 
@@ -22,9 +22,11 @@ def test_curve_add_liquidity(weiroll_vm):
     w_dai = WeirollContract.createContract(dai)
     w_curve_pool = WeirollContract.createContract(curve_pool)
 
-    planner.add(w_dai.approve(w_curve_pool.address, 2**256-1))
+    planner.add(w_dai.approve(w_curve_pool.address, 2 ** 256 - 1))
     w_dai_balance = planner.add(w_dai.balanceOf(weiroll_vm.address))
     planner.add(w_curve_pool.add_liquidity([w_dai_balance, 0, 0], 0))
 
     cmds, state = planner.plan()
-    weiroll_tx = weiroll_vm.execute(cmds, state, {"from": whale, "gas_limit": 8_000_000, "gas_price": 0})
+    weiroll_tx = weiroll_vm.execute(
+        cmds, state, {"from": whale, "gas_limit": 8_000_000, "gas_price": 0}
+    )

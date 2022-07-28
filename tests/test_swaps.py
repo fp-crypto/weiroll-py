@@ -13,7 +13,6 @@ def test_swaps(accounts, weiroll_vm):
     crvseth = Contract("0xc5424B857f758E906013F3555Dad202e4bdB4567")
     susd = Contract("0x57Ab1ec28D129707052df4dF418D58a2D46d5f51")
 
-    weiroll_vm = accounts[0].deploy(TestableVM)
     planner = WeirollPlanner(whale)
     yvweth = WeirollContract.createContract(
         Contract("0xa258C4606Ca8206D8aA700cE2143D7db854D168c")
@@ -80,6 +79,8 @@ def test_swaps(accounts, weiroll_vm):
     weiroll_tx = weiroll_vm.execute(
         cmds, state, {"from": weiroll_vm, "gas_limit": 8_000_000, "gas_price": 0}
     )
+
+    assert False
 
 
 def test_balancer_swap(accounts, weiroll_vm, tuple_helper):
@@ -165,8 +166,11 @@ def test_balancer_swap(accounts, weiroll_vm, tuple_helper):
     assert bal.balanceOf(weiroll_vm) > 0
     assert weth.balanceOf(weiroll_vm) == 0
 
+    weiroll_tx = safe.contract(address)
     weiroll_tx = weiroll_vm.execute(cmds, state)
     weiroll_tx.call_trace(True)
 
     assert bal.balanceOf(weiroll_vm) == 0
     assert weth.balanceOf(weiroll_vm) > min_out_weth_bal
+
+    assert False

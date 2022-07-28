@@ -148,12 +148,12 @@ library CommandBuilder {
         uint256 idx = uint256(uint8(index));
         if (idx == IDX_END_OF_ARGS) return;
 
-        bytes memory entry = state[idx] = new bytes(output.length + 32);
-        memcpy(output, 0, entry, 32, output.length);
-        assembly {
-            let l := mload(output)
-            mstore(add(entry, 32), l)
-        }
+        bytes memory entry = state[idx & IDX_VALUE_MASK] = new bytes(output.length + 32);
+        memcpy(output, 0, entry, 0, output.length + 32);
+        //assembly {
+        //    let l := mload(output)
+        //    mstore(add(entry, 32), l)
+        //}
     }
 
     function memcpy(

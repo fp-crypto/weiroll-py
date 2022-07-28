@@ -14,8 +14,7 @@ from weiroll import WeirollContract
 #    fork_id = resp.json()["simulation_fork"]["id"]
 #    fork_rpc_url = f"https://rpc.tenderly.co/fork/{fork_id}"
 #    print(fork_rpc_url)
-#    tenderly_provider = safe.w3.HTTPProvider(fork_rpc_url, {"timeout": 600})
-#    safe.w3.provider = tenderly_provider
+#    tenderly_provider = brownie.web3.HTTPProvider(fork_rpc_url, {"timeout": 600})
 #    brownie.web3.provider = tenderly_provider
 #    print(f"https://dashboard.tenderly.co/yearn/yearn-web/fork/{fork_id}")
 
@@ -82,3 +81,18 @@ def multiStateSubplanContract(alice, TestMultiStateSubplan):
 def readonlySubplanContract(alice, TestReadonlySubplan):
     brownie_contract = alice.deploy(TestReadonlySubplan)
     yield WeirollContract.createLibrary(brownie_contract)
+
+
+@pytest.fixture(scope="module")
+def tuple_helper(alice, TupleHelper):
+    yield alice.deploy(TupleHelper)
+
+
+@pytest.fixture(scope="module")
+def tuple_helper_yul(alice, TupleHelperYul):
+    yield alice.deploy(TupleHelperYul)
+
+
+@pytest.fixture(scope="module")
+def tuple_helper_vy(alice, TupleHelperVy):
+    yield alice.deploy(TupleHelperVy)

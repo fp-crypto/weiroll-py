@@ -1,5 +1,9 @@
-from brownie import TestableVM, Contract
+from brownie import TestableVM, Contract, convert
 from weiroll import WeirollContract, WeirollPlanner
+import weiroll
+from web3 import Web3
+import random
+import eth_abi
 
 
 def test_swaps(accounts, weiroll_vm):
@@ -76,4 +80,86 @@ def test_swaps(accounts, weiroll_vm):
     weiroll_tx = weiroll_vm.execute(
         cmds, state, {"from": weiroll_vm, "gas_limit": 8_000_000, "gas_price": 0}
     )
-    print(weiroll_tx)
+
+
+def test_balancer_swap(accounts, weiroll_vm, tuple_helper):
+
+    bal_whale = accounts.at("0xF977814e90dA44bFA03b6295A0616a897441aceC", force=True)
+    bal_amount = random.randint(1000, 50000) * 10 ** 18
+
+    planner = WeirollPlanner(weiroll_vm)
+
+    bal = Contract("0xba100000625a3754423978a60c9317c58a424e3D")
+    weth = Contract("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
+    balancer_vault = Contract("0xBA12222222228d8Ba445958a75a0704d566BF2C8")
+
+    bal.transfer(weiroll_vm, bal_amount, {"from": bal_whale})
+
+    w_bal = WeirollContract.createContract(bal)
+    w_balancer_vault = WeirollContract.createContract(balancer_vault)
+    w_tuple_helper = WeirollContract(tuple_helper)
+
+    w_bal_balance = planner.add(w_bal.balanceOf(weiroll_vm.address))
+
+    planner.add(w_bal.approve(w_balancer_vault.address, w_bal_balance))
+
+    bal_weth_pool_id = convert.to_bytes(
+        "0x5c6ee304399dbdb9c8ef030ab642b10820db8f56000200000000000000000014", "bytes32"
+    )
+    deadline = int(999999999999999999)
+
+    min_out_weth_bal = int(bal_amount * 0.001)
+
+    fund_settings = {
+        "sender": weiroll_vm.address,
+        "recipient": weiroll_vm.address,
+        "fromInternalBalance": False,
+        "toInternalBalance": False,
+    }
+
+    swap = {
+        "poolId": bal_weth_pool_id,
+        "assetIn": bal.address,
+        "assetOut": weth.address,
+        "amount": w_bal_balance,
+    }
+    swap_kind = int(0)  # GIVEN_IN
+
+    user_data = convert.to_bytes(bal_weth_pool_id, "bytes")
+
+    swap_struct = (
+        swap["poolId"],
+        swap_kind,
+        Web3.toChecksumAddress(swap["assetIn"]),
+        Web3.toChecksumAddress(swap["assetOut"]),
+        0,  # replace with w_bal_balance,
+        user_data,
+    )
+
+    w_bal_balance = weiroll.ReturnValue("bytes32", w_bal_balance.command)
+    swap_struct_layout = "(bytes32,uint8,address,address,uint256,bytes)"
+
+    w_swap_struct = planner.add(
+        w_tuple_helper.replaceElement(
+            eth_abi.encode_single(swap_struct_layout, swap_struct),
+            4,
+            w_bal_balance,
+            True,
+        ).rawValue()
+    )
+    w_swap_struct = weiroll.ReturnValue(swap_struct_layout, w_swap_struct.command)
+
+    fund_struct = (
+        Web3.toChecksumAddress(fund_settings["sender"]),
+        fund_settings["fromInternalBalance"],
+        Web3.toChecksumAddress(fund_settings["recipient"]),
+        fund_settings["toInternalBalance"],
+    )
+
+    planner.add(
+        w_balancer_vault.swap(w_swap_struct, fund_struct, min_out_weth_bal, deadline)
+    )
+
+    cmds, state = planner.plan()
+    weiroll_tx = weiroll_vm.execute(cmds, state)
+    weiroll_tx.call_trace(True)

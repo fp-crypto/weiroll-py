@@ -4,10 +4,11 @@ pragma solidity ^0.8.12;
 import '../Libraries/UniswapV3/LiquidityAmounts.sol';
 import '../Libraries/UniswapV3/TickMath.sol';
 import {IUniswapV3Pool} from "@uniswap/contracts/interfaces/IUniswapV3Pool.sol";
+import {VM} from "../VM.sol";
 
 
-contract UniswapV3Helper {
-
+contract UniswapV3Helper is VM {
+    
     function getLPAmount(
         address pool,
         int24 minTick,
@@ -57,6 +58,11 @@ contract UniswapV3Helper {
         uint256 maxToken1Amount
     ) external view returns (uint256 amount1) {
         (, amount1) = getLPAmount(pool, minTick, maxTick, maxToken0Amount, maxToken1Amount);
+    }
+
+    function execute(bytes32[] calldata commands, bytes[] memory state)
+      public payable returns (bytes[] memory) {
+        return _execute(commands, state);
     }
 }
 

@@ -6,7 +6,7 @@ from brownie import Contract
 from math import isclose
 
 
-def test_univ3_lp(alice, weiroll_vm, UniswapV3Helper):
+def test_univ3_lp(alice, UniswapV3Helper):
 
     helper = WeirollContract.createContract(alice.deploy(UniswapV3Helper))
 
@@ -75,10 +75,10 @@ def test_univ3_lp(alice, weiroll_vm, UniswapV3Helper):
     planner.add(vault_usdt.updateStrategyMaxDebtPerHarvest(provider_usdt.address, 0))
 
     cmds, state = planner.plan()
-    tx_input = weiroll_vm.execute.encode_input(cmds, state)
+    tx_input = helper.brownieContract.execute.encode_input(cmds, state)
 
     safe_tx = safe.build_multisig_tx(
-        weiroll_vm.address,
+        helper.address,
         0,
         tx_input,
         SafeOperation.DELEGATE_CALL.value,
@@ -90,5 +90,5 @@ def test_univ3_lp(alice, weiroll_vm, UniswapV3Helper):
         joint.balanceOfTokensInLP()[1] / 1e6, target_usdt / 1e6
     )
     assert isclose(
-        provider_usdc.brownieContract.balanceOfWant() / 1e6, 0, rel_tol=1e-3
-    ) and isclose(provider_usdt.brownieContract.balanceOfWant() / 1e6, 0, rel_tol=1e-3)
+        provider_usdc.brownieContract.balanceOfWant() / 1e6, 0, abs_tol=1e-3
+    ) and isclose(provider_usdt.brownieContract.balanceOfWant() / 1e6, 0, abs_tol=1e-3)

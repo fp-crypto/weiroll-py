@@ -30,9 +30,9 @@ contract UniswapV3Helper {
             uint128 liquidity1 = LiquidityAmounts.getLiquidityForAmount1(sqrtRatioAX96, sqrtRatioX96, maxToken1Amount);
 
             if (liquidity0 < liquidity1) {
-                return (maxToken0Amount, LiquidityAmounts.getAmount1ForLiquidity(sqrtRatioAX96, sqrtRatioBX96, liquidity0));
+                return (maxToken0Amount, LiquidityAmounts.getAmount1ForLiquidity(sqrtRatioAX96, sqrtRatioX96, liquidity0));
             } else {
-                return (LiquidityAmounts.getAmount0ForLiquidity(sqrtRatioAX96, sqrtRatioBX96, liquidity1), maxToken1Amount);
+                return (LiquidityAmounts.getAmount0ForLiquidity(sqrtRatioX96, sqrtRatioBX96, liquidity1), maxToken1Amount);
             }
         } else {
             return (0, maxToken1Amount);

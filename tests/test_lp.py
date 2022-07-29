@@ -3,6 +3,7 @@ from weiroll import WeirollContract
 from ape_safe import ApeSafe
 from gnosis.safe import SafeOperation
 from brownie import Contract
+from math import isclose
 
 def test_univ3_lp(alice, weiroll_vm, UniswapV3Helper):
 
@@ -45,12 +46,12 @@ def test_univ3_lp(alice, weiroll_vm, UniswapV3Helper):
     planner.add(provider_usdc.harvest())
     planner.add(provider_usdt.harvest())
 
-    # # Give back dr usdc and usdt
-    # vault_usdc.updateStrategyDebtRatio(provider_usdc, 0)
-    # vault_usdt.updateStrategyDebtRatio(provider_usdt, 0)
-    # # Avoid getting new debt in harvest trigger
-    # vault_usdc.updateStrategyMaxDebtPerHarvest(provider_usdc, 0)
-    # vault_usdt.updateStrategyMaxDebtPerHarvest(provider_usdt, 0)
+    # Give back dr usdc and usdt
+    planner.add(vault_usdc.updateStrategyDebtRatio(provider_usdc.address, 0))
+    planner.add(vault_usdt.updateStrategyDebtRatio(provider_usdt.address, 0))
+    # Avoid getting new debt in harvest trigger
+    planner.add(vault_usdc.updateStrategyMaxDebtPerHarvest(provider_usdc.address, 0))
+    planner.add(vault_usdt.updateStrategyMaxDebtPerHarvest(provider_usdt.address, 0))
 
     cmds, state = planner.plan()
     tx_input = weiroll_vm.execute.encode_input(cmds, state)
@@ -58,5 +59,5 @@ def test_univ3_lp(alice, weiroll_vm, UniswapV3Helper):
     safe_tx = safe.build_multisig_tx(weiroll_vm.address, 0, tx_input, SafeOperation.DELEGATE_CALL.value, safe.pending_nonce())
     safe.preview(safe_tx, reset=False, call_trace=True)
 
-    print("Invested tokens are: ", joint.balanceOfTokensInLP())
-    assert False
+    assert isclose(joint.balanceOfTokensInLP()[0]/1e6, target_usdc/1e6) or isclose(joint.balanceOfTokensInLP()[1] / 1e6, target_usdt / 1e6)
+    assert isclose(provider_usdc.brownieContract.balanceOfWant()/1e6, 0) and isclose(provider_usdt.brownieContract.balanceOfWant() / 1e6, 0)

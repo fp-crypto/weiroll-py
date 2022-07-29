@@ -1,37 +1,25 @@
 [[package]]
 name = "aiohttp"
-version = "3.8.1"
+version = "3.7.4.post0"
 description = "Async http client/server framework (asyncio)"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-aiosignal = ">=1.1.2"
-async-timeout = ">=4.0.0a3,<5.0"
+async-timeout = ">=3.0,<4.0"
 attrs = ">=17.3.0"
-charset-normalizer = ">=2.0,<3.0"
-frozenlist = ">=1.1.1"
+chardet = ">=2.0,<5.0"
 multidict = ">=4.5,<7.0"
+typing-extensions = ">=3.6.5"
 yarl = ">=1.0,<2.0"
 
 [package.extras]
-speedups = ["aiodns", "brotli", "cchardet"]
-
-[[package]]
-name = "aiosignal"
-version = "1.2.0"
-description = "aiosignal: a list of registered asynchronous callbacks"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-frozenlist = ">=1.1.0"
+speedups = ["aiodns", "brotlipy", "cchardet"]
 
 [[package]]
 name = "ape-safe"
-version = "0.5.0"
+version = "0.5.1"
 description = "Build complex Gnosis Safe transactions and safely preview them in a forked environment."
 category = "dev"
 optional = false
@@ -39,12 +27,20 @@ python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
 eth-brownie = ">=1.17.0,<2.0.0"
-gnosis-py = ">=3.6.0,<4.0.0"
+gnosis-py = ">=3.7.5,<4.0.0"
 trezor = ">=0.13.0,<0.14.0"
 
 [[package]]
+name = "asn1crypto"
+version = "1.5.1"
+description = "Fast ASN.1 parser and serializer with definitions for private keys, public keys, certificates, CRL, OCSP, CMS, PKCS#3, PKCS#7, PKCS#8, PKCS#12, PKCS#5, X.509 and TSP"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "asttokens"
-version = "2.0.5"
+version = "2.0.4"
 description = "Annotate AST trees with source code positions"
 category = "main"
 optional = false
@@ -58,11 +54,11 @@ test = ["astroid", "pytest"]
 
 [[package]]
 name = "async-timeout"
-version = "4.0.2"
+version = "3.0.1"
 description = "Timeout context manager for asyncio programs"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.5.3"
 
 [[package]]
 name = "atomicwrites"
@@ -74,28 +70,28 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "attrs"
-version = "21.4.0"
+version = "21.2.0"
 description = "Classes Without Boilerplate"
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.extras]
-dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit", "cloudpickle"]
+dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit"]
 docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
-tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "cloudpickle"]
-tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
+tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface"]
+tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins"]
 
 [[package]]
 name = "base58"
-version = "2.1.1"
+version = "2.1.0"
 description = "Base58 and Base58Check implementation."
 category = "main"
 optional = false
 python-versions = ">=3.5"
 
 [package.extras]
-tests = ["mypy", "PyHamcrest (>=2.0.2)", "pytest (>=4.6)", "pytest-benchmark", "pytest-cov", "pytest-flake8"]
+tests = ["pytest-benchmark", "coveralls", "PyHamcrest (>=2.0.2)", "pytest-cov", "pytest-flake8", "pytest (>=4.6)"]
 
 [[package]]
 name = "bitarray"
@@ -107,24 +103,26 @@ python-versions = "*"
 
 [[package]]
 name = "black"
-version = "22.3.0"
+version = "21.9b0"
 description = "The uncompromising code formatter."
 category = "main"
 optional = false
 python-versions = ">=3.6.2"
 
 [package.dependencies]
-click = ">=8.0.0"
+click = ">=7.1.2"
 mypy-extensions = ">=0.4.3"
-pathspec = ">=0.9.0"
+pathspec = ">=0.9.0,<1"
 platformdirs = ">=2"
-tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
-typing-extensions = {version = ">=3.10.0.0", markers = "python_version < \"3.10\""}
+regex = ">=2020.1.8"
+tomli = ">=0.2.6,<2.0.0"
+typing-extensions = ">=3.10.0.0"
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
-d = ["aiohttp (>=3.7.4)"]
+d = ["aiohttp (>=3.6.0)", "aiohttp-cors (>=0.4.0)"]
 jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
+python2 = ["typed-ast (>=1.4.2)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
@@ -137,15 +135,34 @@ python-versions = "*"
 
 [[package]]
 name = "certifi"
-version = "2022.5.18.1"
+version = "2021.10.8"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = "*"
+
+[[package]]
+name = "cffi"
+version = "1.15.1"
+description = "Foreign Function Interface for Python calling C code."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pycparser = "*"
+
+[[package]]
+name = "chardet"
+version = "4.0.0"
+description = "Universal encoding detector for Python 2 and 3"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "charset-normalizer"
-version = "2.0.12"
+version = "2.0.7"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
 category = "main"
 optional = false
@@ -156,14 +173,26 @@ unicode_backport = ["unicodedata2"]
 
 [[package]]
 name = "click"
-version = "8.1.3"
+version = "8.0.3"
 description = "Composable command line interface toolkit"
 category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[[package]]
+name = "coincurve"
+version = "17.0.0"
+description = "Cross-platform Python CFFI bindings for libsecp256k1"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-colorama = {version = "*", markers = "platform_system == \"Windows\""}
+asn1crypto = "*"
+cffi = ">=1.3.0"
 
 [[package]]
 name = "colorama"
@@ -186,11 +215,11 @@ extras = ["arrow", "cloudpickle", "enum34", "lz4", "numpy", "ruamel.yaml"]
 
 [[package]]
 name = "cytoolz"
-version = "0.11.2"
+version = "0.11.0"
 description = "Cython implementation of Toolz: High performance functional utilities"
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = "*"
 
 [package.dependencies]
 toolz = ">=0.8.0"
@@ -200,7 +229,7 @@ cython = ["cython"]
 
 [[package]]
 name = "dataclassy"
-version = "0.11.1"
+version = "0.11.0"
 description = "A fast and flexible reimplementation of data classes"
 category = "main"
 optional = false
@@ -278,7 +307,7 @@ tools = ["hypothesis (>=3.6.1,<4)"]
 
 [[package]]
 name = "eth-account"
-version = "0.5.7"
+version = "0.5.6"
 description = "eth-account: Sign Ethereum transactions and messages with local private keys"
 category = "main"
 optional = false
@@ -288,125 +317,109 @@ python-versions = ">=3.6, <4"
 bitarray = ">=1.2.1,<1.3.0"
 eth-abi = ">=2.0.0b7,<3"
 eth-keyfile = ">=0.5.0,<0.6.0"
-eth-keys = ">=0.3.4,<0.4.0"
+eth-keys = ">=0.2.1,<0.3.2 || >0.3.2,<0.4.0"
 eth-rlp = ">=0.1.2,<2"
 eth-utils = ">=1.3.0,<2"
 hexbytes = ">=0.1.0,<1"
 rlp = ">=1.0.0,<3"
 
 [package.extras]
-dev = ["bumpversion (>=0.5.3,<1)", "pytest-watch (>=4.1.0,<5)", "wheel", "twine", "ipython", "hypothesis (>=4.18.0,<5)", "pytest (>=6.2.5,<7)", "pytest-xdist", "tox (==3.14.6)", "flake8 (==3.7.9)", "isort (>=4.2.15,<5)", "mypy (==0.770)", "pydocstyle (>=5.0.0,<6)", "Sphinx (>=1.6.5,<2)", "sphinx-rtd-theme (>=0.1.9,<1)", "towncrier (>=19.2.0,<20)"]
+dev = ["bumpversion (>=0.5.3,<1)", "pytest-watch (>=4.1.0,<5)", "wheel", "twine", "ipython", "hypothesis (>=4.18.0,<5)", "pytest (==5.4.1)", "pytest-xdist", "tox (==3.14.6)", "flake8 (==3.7.9)", "isort (>=4.2.15,<5)", "mypy (==0.770)", "pydocstyle (>=5.0.0,<6)", "Sphinx (>=1.6.5,<2)", "sphinx-rtd-theme (>=0.1.9,<1)", "towncrier (>=19.2.0,<20)"]
 doc = ["Sphinx (>=1.6.5,<2)", "sphinx-rtd-theme (>=0.1.9,<1)", "towncrier (>=19.2.0,<20)"]
 lint = ["flake8 (==3.7.9)", "isort (>=4.2.15,<5)", "mypy (==0.770)", "pydocstyle (>=5.0.0,<6)"]
-test = ["hypothesis (>=4.18.0,<5)", "pytest (>=6.2.5,<7)", "pytest-xdist", "tox (==3.14.6)"]
-
-[[package]]
-name = "eth-bloom"
-version = "1.0.4"
-description = "Python implementation of the Ethereum Trie structure"
-category = "dev"
-optional = false
-python-versions = ">=3.6, <4"
-
-[package.dependencies]
-eth-hash = {version = ">=0.3.1,<0.4.0", extras = ["pycryptodome"]}
-
-[package.extras]
-test = ["tox (==2.6.0)", "hypothesis (==3.7.0)", "pytest (==3.0.7)"]
-lint = ["mypy (<0.600)", "flake8 (>=3.5.0,<4.0.0)"]
-dev = ["mypy (<0.600)", "flake8 (>=3.5.0,<4.0.0)", "tox (==2.6.0)", "hypothesis (==3.7.0)", "pytest (==3.0.7)", "twine", "wheel (>=0.30.0,<1.0.0)", "bumpversion (>=0.5.3,<1.0.0)"]
-deploy = ["wheel (>=0.30.0,<1.0.0)", "bumpversion (>=0.5.3,<1.0.0)"]
+test = ["hypothesis (>=4.18.0,<5)", "pytest (==5.4.1)", "pytest-xdist", "tox (==3.14.6)"]
 
 [[package]]
 name = "eth-brownie"
-version = "1.19.0"
+version = "1.17.0"
 description = "A Python framework for Ethereum smart contract deployment, testing and interaction."
 category = "main"
 optional = false
 python-versions = ">=3.7,<4"
 
 [package.dependencies]
-aiohttp = "3.8.1"
-aiosignal = "1.2.0"
-asttokens = "2.0.5"
-async-timeout = "4.0.2"
-attrs = "21.4.0"
-base58 = "2.1.1"
+aiohttp = "3.7.4.post0"
+asttokens = "2.0.4"
+async-timeout = "3.0.1"
+attrs = "21.2.0"
+base58 = "2.1.0"
 bitarray = "1.2.2"
-black = "22.3.0"
-certifi = "2022.5.18.1"
-charset-normalizer = "2.0.12"
-click = "8.1.3"
-cytoolz = "0.11.2"
-dataclassy = "0.11.1"
+black = "21.9b0"
+certifi = "2021.10.8"
+chardet = "4.0.0"
+charset-normalizer = "2.0.7"
+click = "8.0.3"
+cytoolz = "0.11.0"
+dataclassy = "0.11.0"
 eip712 = "0.1.0"
 eth-abi = "2.1.1"
-eth-account = "0.5.7"
+eth-account = "0.5.6"
 eth-event = "1.2.3"
 eth-hash = {version = "0.3.2", extras = ["pycryptodome"]}
 eth-keyfile = "0.5.1"
-eth-keys = "0.3.4"
+eth-keys = "0.3.3"
 eth-rlp = "0.2.1"
-eth-typing = "2.3.0"
+eth-typing = "2.2.2"
 eth-utils = "1.10.0"
 execnet = "1.9.0"
-frozenlist = "1.3.0"
 hexbytes = "0.2.2"
-hypothesis = "6.27.3"
-idna = "3.3"
+hypothesis = "6.23.2"
+idna = "3.2"
 inflection = "0.5.0"
 iniconfig = "1.1.1"
 ipfshttpclient = "0.8.0a2"
 jsonschema = "3.2.0"
-lazy-object-proxy = "1.7.1"
+lazy-object-proxy = "1.6.0"
 lru-dict = "1.1.7"
 multiaddr = "0.0.9"
-multidict = "6.0.2"
+multidict = "5.2.0"
 mypy-extensions = "0.4.3"
 mythx-models = "1.9.1"
 netaddr = "0.8.0"
-packaging = "21.3"
+packaging = "21.0"
 parsimonious = "0.8.1"
 pathspec = "0.9.0"
-platformdirs = "2.5.2"
+platformdirs = "2.4.0"
 pluggy = "1.0.0"
-prompt-toolkit = "3.0.29"
-protobuf = "3.20.1"
-psutil = "5.9.1"
-py = "1.11.0"
+prompt-toolkit = "3.0.20"
+protobuf = "3.18.1"
+psutil = "5.8.0"
+py = "1.10.0"
 py-solc-ast = "1.2.9"
 py-solc-x = "1.1.1"
-pycryptodome = "3.14.1"
-pygments = "2.12.0"
+pycryptodome = "3.11.0"
+pygments = "2.10.0"
 pygments-lexer-solidity = "0.7.0"
 pyjwt = "1.7.1"
-pyparsing = "3.0.9"
-pyrsistent = "0.18.1"
+pyparsing = "2.4.7"
+pyrsistent = "0.18.0"
 pytest = "6.2.5"
-pytest-forked = "1.4.0"
+pytest-forked = "1.3.0"
 pytest-xdist = "1.34.0"
 python-dateutil = "2.8.1"
 python-dotenv = "0.16.0"
 pythx = "1.6.1"
 pyyaml = "5.4.1"
-requests = "2.27.1"
-rlp = "2.0.1"
+regex = "2021.10.8"
+requests = "2.26.0"
+rlp = "1.2.0"
 semantic-version = "2.8.5"
 six = "1.16.0"
 sortedcontainers = "2.4.0"
 toml = "0.10.2"
-tomli = "2.0.1"
-toolz = "0.11.2"
-tqdm = "4.64.0"
-urllib3 = "1.26.9"
+tomli = "1.2.1"
+toolz = "0.11.1"
+tqdm = "4.62.3"
+typing-extensions = "3.10.0.2"
+urllib3 = "1.26.7"
 varint = "1.0.2"
 vvm = "0.1.0"
-vyper = "0.3.3"
+vyper = "0.3.0"
 wcwidth = "0.2.5"
-web3 = "5.29.1"
+web3 = "5.24.0"
 websockets = "9.1"
-wrapt = "1.14.1"
-yarl = "1.7.2"
+wrapt = "1.13.1"
+yarl = "1.7.0"
 
 [[package]]
 name = "eth-event"
@@ -457,7 +470,7 @@ pycryptodome = ">=3.4.7,<4.0.0"
 
 [[package]]
 name = "eth-keys"
-version = "0.3.4"
+version = "0.3.3"
 description = "Common API for Ethereum key operations."
 category = "main"
 optional = false
@@ -465,14 +478,14 @@ python-versions = "*"
 
 [package.dependencies]
 eth-typing = ">=2.2.1,<3.0.0"
-eth-utils = ">=1.8.2,<2.0.0"
+eth-utils = ">=1.3.0,<2.0.0"
 
 [package.extras]
+test = ["eth-hash", "eth-hash", "hypothesis (>=4.56.1,<5.0.0)", "pytest (==3.2.2)", "pyasn1 (>=0.4.5,<0.5)", "asn1tools (>=0.146.2,<0.147)"]
+lint = ["mypy (==0.701)", "flake8 (==3.0.4)"]
+eth-keys = ["eth-typing (>=2.2.1,<3.0.0)", "eth-utils (>=1.3.0,<2.0.0)"]
+dev = ["eth-hash", "eth-hash", "hypothesis (>=4.56.1,<5.0.0)", "pytest (==3.2.2)", "pyasn1 (>=0.4.5,<0.5)", "asn1tools (>=0.146.2,<0.147)", "mypy (==0.701)", "flake8 (==3.0.4)", "eth-typing (>=2.2.1,<3.0.0)", "eth-utils (>=1.3.0,<2.0.0)", "twine", "bumpversion (==0.5.3)", "tox (==2.7.0)"]
 coincurve = ["coincurve (>=7.0.0,<13.0.0)"]
-dev = ["tox (==3.20.0)", "bumpversion (==0.5.3)", "twine", "eth-utils (>=1.8.2,<2.0.0)", "eth-typing (>=2.2.1,<3.0.0)", "flake8 (==3.0.4)", "mypy (==0.782)", "asn1tools (>=0.146.2,<0.147)", "factory-boy (>=3.0.1,<3.1)", "pyasn1 (>=0.4.5,<0.5)", "pytest (==5.4.1)", "hypothesis (>=5.10.3,<6.0.0)", "eth-hash", "eth-hash"]
-eth-keys = ["eth-utils (>=1.8.2,<2.0.0)", "eth-typing (>=2.2.1,<3.0.0)"]
-lint = ["flake8 (==3.0.4)", "mypy (==0.782)"]
-test = ["asn1tools (>=0.146.2,<0.147)", "factory-boy (>=3.0.1,<3.1)", "pyasn1 (>=0.4.5,<0.5)", "pytest (==5.4.1)", "hypothesis (>=5.10.3,<6.0.0)", "eth-hash", "eth-hash"]
 
 [[package]]
 name = "eth-rlp"
@@ -495,7 +508,7 @@ test = ["eth-hash", "pytest-xdist", "pytest (==5.4.1)", "tox (==3.14.6)"]
 
 [[package]]
 name = "eth-typing"
-version = "2.3.0"
+version = "2.2.2"
 description = "eth-typing: Common type annotations for ethereum python packages"
 category = "main"
 optional = false
@@ -528,6 +541,27 @@ lint = ["black (>=18.6b4,<19)", "flake8 (==3.7.9)", "isort (>=4.2.15,<5)", "mypy
 test = ["hypothesis (>=4.43.0,<5.0.0)", "pytest (==5.4.1)", "pytest-xdist", "tox (==3.14.6)"]
 
 [[package]]
+name = "ethereum"
+version = "2.3.2"
+description = "Next generation cryptocurrency network"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+coincurve = ">=7.0.0"
+future = "*"
+pbkdf2 = "*"
+py_ecc = "*"
+pycryptodome = ">=3.4.7"
+pyethash = ">=0.1.27,<1.0.0"
+pysha3 = ">=1.0.1"
+PyYAML = "*"
+"repoze.lru" = "*"
+rlp = ">=1.0.1,<2.0.0"
+scrypt = "*"
+
+[[package]]
 name = "execnet"
 version = "1.9.0"
 description = "execnet: rapid multi-Python deployment"
@@ -539,23 +573,30 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 testing = ["pre-commit"]
 
 [[package]]
-name = "frozenlist"
-version = "1.3.0"
-description = "A list-like structure which implements collections.abc.MutableSequence"
-category = "main"
+name = "future"
+version = "0.18.2"
+description = "Clean single-source support for Python 3 and 2"
+category = "dev"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "gnosis-py"
-version = "3.9.5"
-description = "gnosis-py is now safe-eth-py"
+version = "3.7.8"
+description = "Gnosis libraries for Python Projects"
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 
 [package.dependencies]
-safe-eth-py = "*"
+eip712-structs = "*"
+ethereum = ">=2.3.2"
+packaging = "*"
+requests = ">=2"
+web3 = ">=5.23.0"
+
+[package.extras]
+django = ["django (>=2)", "django-filter (>=2)", "djangorestframework (>=2)"]
 
 [[package]]
 name = "hexbytes"
@@ -573,7 +614,7 @@ test = ["eth-utils (>=1.0.1,<2)", "hypothesis (>=3.44.24,<4)", "pytest-xdist", "
 
 [[package]]
 name = "hypothesis"
-version = "6.27.3"
+version = "6.23.2"
 description = "A library for property-based testing"
 category = "main"
 optional = false
@@ -601,7 +642,7 @@ zoneinfo = ["importlib-resources (>=3.3.0)", "backports.zoneinfo (>=0.2.1)", "tz
 
 [[package]]
 name = "idna"
-version = "3.3"
+version = "3.2"
 description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
@@ -654,11 +695,11 @@ format_nongpl = ["idna", "jsonpointer (>1.13)", "webcolors", "rfc3986-validator 
 
 [[package]]
 name = "lazy-object-proxy"
-version = "1.7.1"
+version = "1.6.0"
 description = "A fast and thorough lazy object proxy."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 
 [[package]]
 name = "libusb1"
@@ -700,11 +741,11 @@ varint = "*"
 
 [[package]]
 name = "multidict"
-version = "6.0.2"
+version = "5.2.0"
 description = "multidict implementation"
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 
 [[package]]
 name = "mypy-extensions"
@@ -737,14 +778,14 @@ python-versions = "*"
 
 [[package]]
 name = "packaging"
-version = "21.3"
+version = "21.0"
 description = "Core utilities for Python packages"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-pyparsing = ">=2.0.2,<3.0.5 || >3.0.5"
+pyparsing = ">=2.0.2"
 
 [[package]]
 name = "parsimonious"
@@ -766,16 +807,24 @@ optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 
 [[package]]
+name = "pbkdf2"
+version = "1.3"
+description = "PKCS#5 v2.0 PBKDF2 Module"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "platformdirs"
-version = "2.5.2"
+version = "2.4.0"
 description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 
 [package.extras]
-docs = ["furo (>=2021.7.5b38)", "proselint (>=0.10.2)", "sphinx-autodoc-typehints (>=1.12)", "sphinx (>=4)"]
-test = ["appdirs (==1.4.4)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)", "pytest (>=6)"]
+test = ["pytest-mock (>=3.6)", "pytest-cov (>=2.7)", "pytest (>=6)", "appdirs (==1.4.4)"]
+docs = ["sphinx-autodoc-typehints (>=1.12)", "proselint (>=0.10.2)", "furo (>=2021.7.5b38)", "Sphinx (>=4)"]
 
 [[package]]
 name = "pluggy"
@@ -791,7 +840,7 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "prompt-toolkit"
-version = "3.0.29"
+version = "3.0.20"
 description = "Library for building powerful interactive command lines in Python"
 category = "main"
 optional = false
@@ -802,30 +851,30 @@ wcwidth = "*"
 
 [[package]]
 name = "protobuf"
-version = "3.20.1"
+version = "3.18.1"
 description = "Protocol Buffers"
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.5"
 
 [[package]]
 name = "psutil"
-version = "5.9.1"
+version = "5.8.0"
 description = "Cross-platform lib for process and system monitoring in Python."
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [package.extras]
-test = ["ipaddress", "mock", "enum34", "pywin32", "wmi"]
+test = ["ipaddress", "mock", "unittest2", "enum34", "pywin32", "wmi"]
 
 [[package]]
 name = "py"
-version = "1.11.0"
+version = "1.10.0"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "py-ecc"
@@ -845,36 +894,6 @@ mypy-extensions = ">=0.4.1"
 dev = ["bumpversion (>=0.5.3,<1)", "twine", "pytest (==3.10.1)", "pytest-xdist (==1.26.0)", "flake8 (==3.5.0)", "mypy (==0.641)", "mypy-extensions (>=0.4.1)"]
 lint = ["flake8 (==3.5.0)", "mypy (==0.641)", "mypy-extensions (>=0.4.1)"]
 test = ["pytest (==3.10.1)", "pytest-xdist (==1.26.0)"]
-
-[[package]]
-name = "py-evm"
-version = "0.5.0a3"
-description = "Python implementation of the Ethereum Virtual Machine"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-cached-property = ">=1.5.1,<2"
-eth-bloom = ">=1.0.3,<2.0.0"
-eth-keys = ">=0.3.4,<0.4.0"
-eth-typing = ">=2.3.0,<3.0.0"
-eth-utils = ">=1.9.4,<2.0.0"
-lru-dict = ">=1.1.6"
-mypy-extensions = ">=0.4.1,<1.0.0"
-py-ecc = ">=1.4.7,<6.0.0"
-pyethash = ">=0.1.27,<1.0.0"
-rlp = ">=2,<3"
-trie = "2.0.0-alpha.5"
-
-[package.extras]
-benchmark = ["termcolor (>=1.1.0,<2.0.0)", "web3 (>=4.1.0,<5.0.0)"]
-dev = ["bumpversion (>=0.5.3,<1)", "wheel", "setuptools (>=36.2.0)", "idna (==2.7)", "requests (>=2.20,<3)", "tox (==2.7.0)", "twine", "cached-property (>=1.5.1,<2)", "eth-bloom (>=1.0.3,<2.0.0)", "eth-keys (>=0.3.4,<0.4.0)", "eth-typing (>=2.3.0,<3.0.0)", "eth-utils (>=1.9.4,<2.0.0)", "lru-dict (>=1.1.6)", "mypy-extensions (>=0.4.1,<1.0.0)", "py-ecc (>=1.4.7,<6.0.0)", "pyethash (>=0.1.27,<1.0.0)", "rlp (>=2,<3)", "trie (==2.0.0-alpha.5)", "factory-boy (==2.11.1)", "hypothesis (>=5,<6)", "pexpect (>=4.6,<5)", "pytest (>=6.2.4,<7)", "pytest-asyncio (>=0.10.0,<0.11)", "pytest-cov (==2.5.1)", "pytest-timeout (>=1.4.2,<2)", "pytest-watch (>=4.1.0,<5)", "pytest-xdist (==2.3.0)", "py-evm (>=0.2.0-alpha.14)", "pysha3 (>=1.0.0,<2.0.0)", "Sphinx (>=1.5.5,<1.8.0)", "sphinx-rtd-theme (>=0.1.9)", "sphinxcontrib-asyncio (>=0.2.0,<0.3)", "towncrier (>=19.2.0,<20)", "flake8 (==3.8.2)", "flake8-bugbear (==20.1.4)", "mypy (==0.782)"]
-doc = ["py-evm (>=0.2.0-alpha.14)", "pysha3 (>=1.0.0,<2.0.0)", "Sphinx (>=1.5.5,<1.8.0)", "sphinx-rtd-theme (>=0.1.9)", "sphinxcontrib-asyncio (>=0.2.0,<0.3)", "towncrier (>=19.2.0,<20)"]
-eth = ["cached-property (>=1.5.1,<2)", "eth-bloom (>=1.0.3,<2.0.0)", "eth-keys (>=0.3.4,<0.4.0)", "eth-typing (>=2.3.0,<3.0.0)", "eth-utils (>=1.9.4,<2.0.0)", "lru-dict (>=1.1.6)", "mypy-extensions (>=0.4.1,<1.0.0)", "py-ecc (>=1.4.7,<6.0.0)", "pyethash (>=0.1.27,<1.0.0)", "rlp (>=2,<3)", "trie (==2.0.0-alpha.5)"]
-eth-extra = ["blake2b-py (>=0.1.4,<0.2)", "coincurve (>=13.0.0,<14.0.0)", "plyvel (>=1.2.0,<2)", "eth-hash", "eth-hash"]
-lint = ["flake8 (==3.8.2)", "flake8-bugbear (==20.1.4)", "mypy (==0.782)"]
-test = ["factory-boy (==2.11.1)", "hypothesis (>=5,<6)", "pexpect (>=4.6,<5)", "pytest (>=6.2.4,<7)", "pytest-asyncio (>=0.10.0,<0.11)", "pytest-cov (==2.5.1)", "pytest-timeout (>=1.4.2,<2)", "pytest-watch (>=4.1.0,<5)", "pytest-xdist (==2.3.0)"]
 
 [[package]]
 name = "py-solc-ast"
@@ -897,8 +916,16 @@ requests = ">=2.19.0,<3"
 semantic-version = ">=2.8.1,<3"
 
 [[package]]
+name = "pycparser"
+version = "2.21"
+description = "C parser in Python"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
 name = "pycryptodome"
-version = "3.14.1"
+version = "3.11.0"
 description = "Cryptographic library for Python"
 category = "main"
 optional = false
@@ -914,11 +941,11 @@ python-versions = "*"
 
 [[package]]
 name = "pygments"
-version = "2.12.0"
+version = "2.10.0"
 description = "Pygments is a syntax highlighting package written in Python."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.5"
 
 [[package]]
 name = "pygments-lexer-solidity"
@@ -946,22 +973,19 @@ test = ["pytest (>=4.0.1,<5.0.0)", "pytest-cov (>=2.6.0,<3.0.0)", "pytest-runner
 
 [[package]]
 name = "pyparsing"
-version = "3.0.9"
-description = "pyparsing module - Classes and methods to define and execute parsing grammars"
+version = "2.4.7"
+description = "Python parsing module"
 category = "main"
 optional = false
-python-versions = ">=3.6.8"
-
-[package.extras]
-diagrams = ["railroad-diagrams", "jinja2"]
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "pyrsistent"
-version = "0.18.1"
+version = "0.18.0"
 description = "Persistent/Functional/Immutable data structures"
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 
 [[package]]
 name = "pysha3"
@@ -994,11 +1018,11 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 name = "pytest-forked"
-version = "1.4.0"
+version = "1.3.0"
 description = "run tests in isolated forked subprocesses"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.dependencies]
 py = "*"
@@ -1075,8 +1099,28 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 
 [[package]]
+name = "regex"
+version = "2021.10.8"
+description = "Alternative regular expression module, to replace re."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "repoze.lru"
+version = "0.7"
+description = "A tiny LRU cache implementation and decorator"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.extras]
+docs = ["sphinx"]
+testing = ["coverage", "nose"]
+
+[[package]]
 name = "requests"
-version = "2.27.1"
+version = "2.26.0"
 description = "Python HTTP for Humans."
 category = "main"
 optional = false
@@ -1094,7 +1138,7 @@ use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
 name = "rlp"
-version = "2.0.1"
+version = "1.2.0"
 description = "A package for Recursive Length Prefix encoding and decoding"
 category = "main"
 optional = false
@@ -1104,30 +1148,18 @@ python-versions = "*"
 eth-utils = ">=1.0.2,<2"
 
 [package.extras]
-dev = ["Sphinx (>=1.6.5,<2)", "bumpversion (>=0.5.3,<1)", "flake8 (==3.4.1)", "hypothesis (==5.19.0)", "ipython", "pytest-watch (>=4.1.0,<5)", "pytest-xdist", "pytest (==5.4.3)", "setuptools (>=36.2.0)", "sphinx-rtd-theme (>=0.1.9)", "tox (>=2.9.1,<3)", "twine", "wheel"]
-doc = ["Sphinx (>=1.6.5,<2)", "sphinx-rtd-theme (>=0.1.9)"]
+test = ["hypothesis (==3.56.5)", "tox (>=2.9.1,<3)", "pytest (==3.3.2)"]
 lint = ["flake8 (==3.4.1)"]
-rust-backend = ["rusty-rlp (>=0.1.15,<0.2)"]
-test = ["hypothesis (==5.19.0)", "pytest (==5.4.3)", "tox (>=2.9.1,<3)"]
+doc = ["sphinx-rtd-theme (>=0.1.9)", "Sphinx (>=1.6.5,<2)"]
+dev = ["sphinx-rtd-theme (>=0.1.9)", "Sphinx (>=1.6.5,<2)", "flake8 (==3.4.1)", "hypothesis (==3.56.5)", "tox (>=2.9.1,<3)", "pytest (==3.3.2)", "twine", "ipython", "wheel", "pytest-watch (>=4.1.0,<5)", "pytest-xdist", "setuptools (>=36.2.0)", "bumpversion (>=0.5.3,<1)"]
 
 [[package]]
-name = "safe-eth-py"
-version = "4.3.0"
-description = "Gnosis libraries for Python Projects"
+name = "scrypt"
+version = "0.8.20"
+description = "Bindings for the scrypt key derivation function library"
 category = "dev"
 optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-eip712-structs = "*"
-packaging = "*"
-py-evm = "0.5.0a3"
-pysha3 = ">=1.0.0"
-requests = ">=2"
-web3 = ">=5.23.0"
-
-[package.extras]
-django = ["django (>=2)", "django-filter (>=2)", "djangorestframework (>=2)"]
+python-versions = "*"
 
 [[package]]
 name = "semantic-version"
@@ -1171,15 +1203,15 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "tomli"
-version = "2.0.1"
+version = "1.2.1"
 description = "A lil' TOML parser"
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 
 [[package]]
 name = "toolz"
-version = "0.11.2"
+version = "0.11.1"
 description = "List processing tools and functional utilities"
 category = "main"
 optional = false
@@ -1187,7 +1219,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "tqdm"
-version = "4.64.0"
+version = "4.62.3"
 description = "Fast, Extensible Progress Meter"
 category = "main"
 optional = false
@@ -1199,7 +1231,6 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 [package.extras]
 dev = ["py-make (>=0.1.0)", "twine", "wheel"]
 notebook = ["ipywidgets (>=6)"]
-slack = ["slack-sdk"]
 telegram = ["requests"]
 
 [[package]]
@@ -1229,27 +1260,6 @@ qt-widgets = ["pyqt5"]
 stellar = ["stellar-sdk (>=4.0.0,<6.0.0)"]
 
 [[package]]
-name = "trie"
-version = "2.0.0a5"
-description = "Python implementation of the Ethereum Trie structure"
-category = "dev"
-optional = false
-python-versions = ">=3.6,<4"
-
-[package.dependencies]
-eth-hash = ">=0.1.0,<1.0.0"
-eth-utils = ">=1.6.1,<2.0.0"
-hexbytes = ">=0.2.0,<0.3.0"
-rlp = ">=1,<3"
-sortedcontainers = ">=2.1.0,<3"
-typing-extensions = ">=3.7.4,<4"
-
-[package.extras]
-dev = ["bumpversion (>=0.5.3,<1)", "eth-hash (>=0.1.0,<1.0.0)", "flake8 (==3.8.1)", "hypothesis (>=5.10.4,<6)", "pycryptodome", "pytest-xdist (>=1.31.0,<2)", "tox (>=2.6.0,<3)", "twine", "wheel"]
-lint = ["flake8 (==3.8.1)"]
-test = ["hypothesis (>=5.10.4,<6)", "pycryptodome", "pytest-xdist (>=1.31.0,<2)", "tox (>=2.6.0,<3)"]
-
-[[package]]
 name = "typing-extensions"
 version = "3.10.0.2"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -1259,14 +1269,14 @@ python-versions = "*"
 
 [[package]]
 name = "urllib3"
-version = "1.26.9"
+version = "1.26.7"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 
 [package.extras]
-brotli = ["brotlicffi (>=0.8.0)", "brotli (>=1.0.9)", "brotlipy (>=0.6.0)"]
+brotli = ["brotlipy (>=0.6.0)"]
 secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
@@ -1292,22 +1302,22 @@ semantic-version = ">=2.8.1,<3"
 
 [[package]]
 name = "vyper"
-version = "0.3.3"
+version = "0.3.0"
 description = "Vyper: the Pythonic Programming Language for the EVM"
 category = "main"
 optional = false
-python-versions = ">=3.7,<3.11"
+python-versions = ">=3.7,<3.10"
 
 [package.dependencies]
-asttokens = "2.0.5"
+asttokens = "2.0.4"
 pycryptodome = ">=3.5.1,<4"
 semantic-version = "2.8.5"
 
 [package.extras]
-dev = ["pytest (>=6.2.5,<7.0)", "pytest-cov (>=2.10,<3.0)", "pytest-instafail (>=0.4,<1.0)", "pytest-xdist (>=2.5,<3.0)", "pytest-split (>=0.7.0,<1.0)", "pytest-rerunfailures (>=10.2,<11)", "eth-tester[py-evm] (>=0.6.0b6,<0.7)", "py-evm (>=0.5.0a3,<0.6)", "web3 (==5.27.0)", "tox (>=3.15,<4.0)", "lark-parser (==0.10.0)", "hypothesis[lark] (>=5.37.1,<6.0)", "black (==21.9b0)", "click (<8.1.0)", "flake8 (==3.9.2)", "flake8-bugbear (==20.1.4)", "flake8-use-fstring (==1.1)", "isort (==5.9.3)", "mypy (==0.910)", "recommonmark", "sphinx (>=3.0,<4.0)", "sphinx-rtd-theme (>=0.5,<0.6)", "ipython", "pre-commit", "pyinstaller", "twine"]
+dev = ["mypy (==0.910)", "pytest (>=5.4,<6.0)", "pytest-cov (>=2.10,<3.0)", "pytest-instafail (>=0.4,<1.0)", "pytest-xdist (>=1.32,<2.0)", "eth-tester[py-evm] (>=0.5.0b1,<0.6)", "py-evm (==0.4.0a4)", "web3 (==5.12.3)", "tox (>=3.15,<4.0)", "lark-parser (==0.10.0)", "hypothesis[lark] (>=5.37.1,<6.0)", "black (==21.9b0)", "flake8 (==3.9.2)", "flake8-bugbear (==20.1.4)", "flake8-use-fstring (==1.1)", "isort (==5.9.3)", "recommonmark", "sphinx (>=3.0,<4.0)", "sphinx-rtd-theme (>=0.5,<0.6)", "ipython", "pre-commit", "pyinstaller", "twine"]
 docs = ["recommonmark", "sphinx (>=3.0,<4.0)", "sphinx-rtd-theme (>=0.5,<0.6)"]
-lint = ["black (==21.9b0)", "click (<8.1.0)", "flake8 (==3.9.2)", "flake8-bugbear (==20.1.4)", "flake8-use-fstring (==1.1)", "isort (==5.9.3)", "mypy (==0.910)"]
-test = ["pytest (>=6.2.5,<7.0)", "pytest-cov (>=2.10,<3.0)", "pytest-instafail (>=0.4,<1.0)", "pytest-xdist (>=2.5,<3.0)", "pytest-split (>=0.7.0,<1.0)", "pytest-rerunfailures (>=10.2,<11)", "eth-tester[py-evm] (>=0.6.0b6,<0.7)", "py-evm (>=0.5.0a3,<0.6)", "web3 (==5.27.0)", "tox (>=3.15,<4.0)", "lark-parser (==0.10.0)", "hypothesis[lark] (>=5.37.1,<6.0)"]
+lint = ["black (==21.9b0)", "flake8 (==3.9.2)", "flake8-bugbear (==20.1.4)", "flake8-use-fstring (==1.1)", "isort (==5.9.3)", "mypy (==0.910)"]
+test = ["pytest (>=5.4,<6.0)", "pytest-cov (>=2.10,<3.0)", "pytest-instafail (>=0.4,<1.0)", "pytest-xdist (>=1.32,<2.0)", "eth-tester[py-evm] (>=0.5.0b1,<0.6)", "py-evm (==0.4.0a4)", "web3 (==5.12.3)", "tox (>=3.15,<4.0)", "lark-parser (==0.10.0)", "hypothesis[lark] (>=5.37.1,<6.0)"]
 
 [[package]]
 name = "wcwidth"
@@ -1319,7 +1329,7 @@ python-versions = "*"
 
 [[package]]
 name = "web3"
-version = "5.29.1"
+version = "5.24.0"
 description = "Web3.py"
 category = "main"
 optional = false
@@ -1328,13 +1338,13 @@ python-versions = ">=3.6,<4"
 [package.dependencies]
 aiohttp = ">=3.7.4.post0,<4"
 eth-abi = ">=2.0.0b6,<3.0.0"
-eth-account = ">=0.5.7,<0.6.0"
+eth-account = ">=0.5.6,<0.6.0"
 eth-hash = {version = ">=0.2.0,<1.0.0", extras = ["pycryptodome"]}
 eth-typing = ">=2.0.0,<3.0.0"
 eth-utils = ">=1.9.5,<2.0.0"
 hexbytes = ">=0.1.0,<1.0.0"
 ipfshttpclient = "0.8.0a2"
-jsonschema = ">=3.2.0,<5"
+jsonschema = ">=3.2.0,<4.0.0"
 lru-dict = ">=1.1.6,<2.0.0"
 protobuf = ">=3.10.0,<4"
 pywin32 = {version = ">=223", markers = "platform_system == \"Windows\""}
@@ -1342,10 +1352,10 @@ requests = ">=2.16.0,<3.0.0"
 websockets = ">=9.1,<10"
 
 [package.extras]
-dev = ["eth-tester[py-evm] (==v0.6.0-beta.6)", "py-geth (>=3.8.0,<4)", "flake8 (==3.8.3)", "isort (>=4.2.15,<4.3.5)", "mypy (==0.910)", "types-setuptools (>=57.4.4,<58)", "types-requests (>=2.26.1,<3)", "types-protobuf (==3.19.13)", "mock", "sphinx-better-theme (>=0.1.4)", "click (>=5.1)", "configparser (==3.5.0)", "contextlib2 (>=0.5.4)", "py-solc (>=0.4.0)", "pytest (>=4.4.0,<5.0.0)", "sphinx (>=3.0,<4)", "sphinx-rtd-theme (>=0.1.9)", "toposort (>=1.4)", "towncrier (==18.5.0)", "urllib3", "wheel", "Jinja2 (<=3.0.3)", "bumpversion", "flaky (>=3.7.0,<4)", "hypothesis (>=3.31.2,<6)", "pytest-asyncio (>=0.10.0,<0.11)", "pytest-mock (>=1.10,<2)", "pytest-pythonpath (>=0.3)", "pytest-watch (>=4.2,<5)", "pytest-xdist (>=1.29,<2)", "setuptools (>=38.6.0)", "tox (>=1.8.0)", "tqdm (>4.32,<5)", "twine (>=1.13,<2)", "pluggy (==0.13.1)", "when-changed (>=0.3.0,<0.4)"]
-docs = ["mock", "sphinx-better-theme (>=0.1.4)", "click (>=5.1)", "configparser (==3.5.0)", "contextlib2 (>=0.5.4)", "py-geth (>=3.8.0,<4)", "py-solc (>=0.4.0)", "pytest (>=4.4.0,<5.0.0)", "sphinx (>=3.0,<4)", "sphinx-rtd-theme (>=0.1.9)", "toposort (>=1.4)", "towncrier (==18.5.0)", "urllib3", "wheel", "Jinja2 (<=3.0.3)"]
-linter = ["flake8 (==3.8.3)", "isort (>=4.2.15,<4.3.5)", "mypy (==0.910)", "types-setuptools (>=57.4.4,<58)", "types-requests (>=2.26.1,<3)", "types-protobuf (==3.19.13)"]
-tester = ["eth-tester[py-evm] (==v0.6.0-beta.6)", "py-geth (>=3.8.0,<4)"]
+dev = ["eth-tester[py-evm] (==v0.5.0-beta.4)", "py-geth (>=3.5.0,<4)", "flake8 (==3.8.3)", "isort (>=4.2.15,<4.3.5)", "mypy (==0.812)", "mock", "sphinx-better-theme (>=0.1.4)", "click (>=5.1)", "configparser (==3.5.0)", "contextlib2 (>=0.5.4)", "py-solc (>=0.4.0)", "pytest (>=4.4.0,<5.0.0)", "sphinx (>=3.0,<4)", "sphinx-rtd-theme (>=0.1.9)", "toposort (>=1.4)", "towncrier (==18.5.0)", "urllib3", "wheel", "bumpversion", "flaky (>=3.7.0,<4)", "hypothesis (>=3.31.2,<6)", "pytest-asyncio (>=0.10.0,<0.11)", "pytest-mock (>=1.10,<2)", "pytest-pythonpath (>=0.3)", "pytest-watch (>=4.2,<5)", "pytest-xdist (>=1.29,<2)", "setuptools (>=38.6.0)", "tox (>=1.8.0)", "tqdm (>4.32,<5)", "twine (>=1.13,<2)", "pluggy (==0.13.1)", "when-changed (>=0.3.0,<0.4)"]
+docs = ["mock", "sphinx-better-theme (>=0.1.4)", "click (>=5.1)", "configparser (==3.5.0)", "contextlib2 (>=0.5.4)", "py-geth (>=3.5.0,<4)", "py-solc (>=0.4.0)", "pytest (>=4.4.0,<5.0.0)", "sphinx (>=3.0,<4)", "sphinx-rtd-theme (>=0.1.9)", "toposort (>=1.4)", "towncrier (==18.5.0)", "urllib3", "wheel"]
+linter = ["flake8 (==3.8.3)", "isort (>=4.2.15,<4.3.5)", "mypy (==0.812)"]
+tester = ["eth-tester[py-evm] (==v0.5.0-beta.4)", "py-geth (>=3.5.0,<4)"]
 
 [[package]]
 name = "websockets"
@@ -1357,7 +1367,7 @@ python-versions = ">=3.6.1"
 
 [[package]]
 name = "wrapt"
-version = "1.14.1"
+version = "1.13.1"
 description = "Module for decorators, wrappers and monkey patching."
 category = "main"
 optional = false
@@ -1365,7 +1375,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 
 [[package]]
 name = "yarl"
-version = "1.7.2"
+version = "1.7.0"
 description = "Yet another URL library"
 category = "main"
 optional = false
@@ -1378,12 +1388,12 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.10"
-content-hash = "34a67965e734245f92ec5e2fba535fb53095493982e513966ba3238a95b7e807"
+content-hash = "eca26f74f8c54b7c573445089a094fda021ccd712dc2fb1a7dbceb50e896eb35"
 
 [metadata.files]
 aiohttp = []
-aiosignal = []
 ape-safe = []
+asn1crypto = []
 asttokens = []
 async-timeout = []
 atomicwrites = []
@@ -1393,8 +1403,11 @@ bitarray = []
 black = []
 cached-property = []
 certifi = []
+cffi = []
+chardet = []
 charset-normalizer = []
 click = []
+coincurve = []
 colorama = []
 construct = []
 cytoolz = []
@@ -1404,7 +1417,6 @@ eip712 = []
 eip712-structs = []
 eth-abi = []
 eth-account = []
-eth-bloom = []
 eth-brownie = []
 eth-event = []
 eth-hash = []
@@ -1413,8 +1425,9 @@ eth-keys = []
 eth-rlp = []
 eth-typing = []
 eth-utils = []
+ethereum = []
 execnet = []
-frozenlist = []
+future = []
 gnosis-py = []
 hexbytes = []
 hypothesis = []
@@ -1435,6 +1448,7 @@ netaddr = []
 packaging = []
 parsimonious = []
 pathspec = []
+pbkdf2 = []
 platformdirs = []
 pluggy = []
 prompt-toolkit = []
@@ -1442,9 +1456,9 @@ protobuf = []
 psutil = []
 py = []
 py-ecc = []
-py-evm = []
 py-solc-ast = []
 py-solc-x = []
+pycparser = []
 pycryptodome = []
 pyethash = []
 pygments = []
@@ -1461,9 +1475,11 @@ python-dotenv = []
 pythx = []
 pywin32 = []
 pyyaml = []
+regex = []
+"repoze.lru" = []
 requests = []
 rlp = []
-safe-eth-py = []
+scrypt = []
 semantic-version = []
 simple-rlp = []
 six = []
@@ -1473,7 +1489,6 @@ tomli = []
 toolz = []
 tqdm = []
 trezor = []
-trie = []
 typing-extensions = []
 urllib3 = []
 varint = []

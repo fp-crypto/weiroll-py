@@ -80,8 +80,6 @@ def test_swaps(accounts, weiroll_vm):
         cmds, state, {"from": weiroll_vm, "gas_limit": 8_000_000, "gas_price": 0}
     )
 
-    assert False
-
 
 def test_balancer_swap(accounts, weiroll_vm, tuple_helper):
 
@@ -166,11 +164,8 @@ def test_balancer_swap(accounts, weiroll_vm, tuple_helper):
     assert bal.balanceOf(weiroll_vm) > 0
     assert weth.balanceOf(weiroll_vm) == 0
 
-    weiroll_tx = safe.contract(address)
     weiroll_tx = weiroll_vm.execute(cmds, state)
     weiroll_tx.call_trace(True)
 
     assert bal.balanceOf(weiroll_vm) == 0
     assert weth.balanceOf(weiroll_vm) > min_out_weth_bal
-
-    assert False

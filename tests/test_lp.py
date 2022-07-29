@@ -89,6 +89,6 @@ def test_univ3_lp(alice, weiroll_vm, UniswapV3Helper):
     assert isclose(joint.balanceOfTokensInLP()[0] / 1e6, target_usdc / 1e6) or isclose(
         joint.balanceOfTokensInLP()[1] / 1e6, target_usdt / 1e6
     )
-    assert isclose(provider_usdc.brownieContract.balanceOfWant() / 1e6, 0) and isclose(
-        provider_usdt.brownieContract.balanceOfWant() / 1e6, 0
-    )
+    assert isclose(
+        provider_usdc.brownieContract.balanceOfWant() / 1e6, 0, rel_tol=1e-3
+    ) and isclose(provider_usdt.brownieContract.balanceOfWant() / 1e6, 0, rel_tol=1e-3)

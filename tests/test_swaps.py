@@ -162,7 +162,7 @@ def test_balancer_swap(accounts, weiroll_vm, tuple_helper):
     )
 
     cmds, state = planner.plan()
-    
+
     assert bal.balanceOf(weiroll_vm) > 0
     assert weth.balanceOf(weiroll_vm) == 0
 

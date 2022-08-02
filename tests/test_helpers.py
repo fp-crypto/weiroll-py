@@ -72,3 +72,19 @@ def test_replace(tuple_helper):
         )
         inserted = HexBytes(rands[: i * 32] + HexBytes(b4) + rands[(i + 1) * 32 :])
         assert r == inserted
+
+
+def test_get(tuple_helper):
+
+    with reverts():
+        tuple_helper.replaceElement.transact(b2 + b1, 2, b4, False)
+
+    rands = HexBytes(
+        b"".join([to_bytes(random.randint(0, 2 ** 256 - 1)) for _ in range(100)])
+    )
+
+    for i in range(100):
+        r = HexBytes(
+            tuple_helper.getElement.transact(rands, i).return_value
+        )
+        assert r == rands[i*32:(i+1)*32]

@@ -10,9 +10,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.10"
-eth-brownie = "^v1.17"
+eth-brownie = "1.17"
 
 [tool.poetry.dev-dependencies]
+ape-safe = "0.5.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -36,5 +36,18 @@ contract TupleHelper {
             }
         }
     }
+
+    function getElement(bytes calldata tuple, uint256 index)
+        public
+        pure
+        returns (bytes memory)
+    {
+        uint256 byteIndex;
+        unchecked { 
+            byteIndex = index * 32;
+            require(tuple.length >= 32 && byteIndex <= tuple.length - 32);
+            return tuple[byteIndex:byteIndex+32];
+        }
+    }
 }
 

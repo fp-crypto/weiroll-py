@@ -37,6 +37,16 @@ contract TupleHelper {
         }
     }
 
+    event SuperDebug(uint256 a, uint256 b, uint256 c);
+    struct OneInchStruct {
+      uint256 a;
+      uint256 b;
+      uint256 c;
+    }
+    function debugger(OneInchStruct calldata s) public {
+        emit SuperDebug(s.a, s.b, s.c);
+    }
+
     function getElement(bytes calldata tuple, uint256 index)
         public
         pure

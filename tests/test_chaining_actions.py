@@ -47,11 +47,9 @@ def test_chaining_action(weiroll_vm, tuple_helper):
         w_one_inch.swap(*params).rawValue()
     )
 
-    one_inch_amount = planner.add(w_tuple_helper.getElement(one_inch_ret, 0))
-    int_amount = ReturnValue('uint256', one_inch_amount.command)
-
-    planner.add(w_yfi.transfer(w_tuple_helper.address, int_amount))
-
+    swap_struct_layout = "(uint256,uint256,uint256)"
+    w_swap_struct = ReturnValue(swap_struct_layout, one_inch_ret.command)
+    one_inch_amount = planner.add(w_tuple_helper.debugger(w_swap_struct))
 
     cmds, state = planner.plan()
     weiroll_tx = weiroll_vm.execute(

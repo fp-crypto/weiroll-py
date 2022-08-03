@@ -25,7 +25,7 @@ contract TupleHelper {
         returns (bytes memory newTuple)
     {
         uint256 byteIndex;
-        unchecked { 
+        unchecked {
             byteIndex = index * 32;
             require(tuple.length >= 32 && byteIndex <= tuple.length - 32);
             newTuple = bytes.concat(tuple[:byteIndex], element, tuple[byteIndex+32:]);
@@ -36,5 +36,17 @@ contract TupleHelper {
             }
         }
     }
-}
 
+    function getElement(bytes calldata tuple, uint256 index)
+        public
+        pure
+        returns (bytes memory)
+    {
+        uint256 byteIndex;
+        unchecked {
+            byteIndex = index * 32;
+            require(tuple.length >= 32 && byteIndex <= tuple.length - 32);
+            return tuple[byteIndex:byteIndex+32];
+        }
+    }
+}

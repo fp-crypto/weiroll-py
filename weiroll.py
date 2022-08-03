@@ -420,7 +420,7 @@ class WeirollPlanner:
 
         return self.call(token, "approve", spender, approve_wei)
 
-    def call(self, brownieContract: brownie.Contract, func_name, *args):
+    def call(self, brownieContract: brownie.Contract, func_name, *args, position: int = None):
         """func_name can be just the name, or it can be the full signature.
 
         If there are multiple functions with the same name, you must use the signature.
@@ -435,9 +435,9 @@ class WeirollPlanner:
         else:
             func = weirollContract.functionsByUniqueName[func_name]
 
-        return self.add(func(*args))
+        return self.add(func(*args), position)
 
-    def delegatecall(self, brownieContract: brownie.Contract, func_name, *args):
+    def delegatecall(self, brownieContract: brownie.Contract, func_name, *args, position: int = None):
         contract = WeirollContract.createLibrary(brownieContract)
 
         if func_name in contract.functionsByUniqueName:
@@ -450,9 +450,9 @@ class WeirollPlanner:
             # print("functionsBySignature:", contract.functionsBySignature)
             raise ValueError(f"Unknown func_name ({func_name}) on {brownieContract}")
 
-        return self.add(func(*args))
+        return self.add(func(*args), position)
 
-    def add(self, call: FunctionCall) -> Optional[ReturnValue]:
+    def add(self, call: FunctionCall, position: int = None) -> Optional[ReturnValue]:
         """
         * Adds a new function call to the planner. Function calls are executed in the order they are added.
         *
@@ -469,7 +469,11 @@ class WeirollPlanner:
         * @returns An object representing the return value of the call, or null if it does not return a value.
         """
         command = Command(call, CommandType.CALL)
-        self.commands.append(command)
+
+        if position is not None:
+            self.commands.insert(position, command)
+        else:
+            self.commands.append(command)
 
         for arg in call.args:
             if isinstance(arg, SubplanValue):
@@ -486,7 +490,7 @@ class WeirollPlanner:
 
         return ReturnValue(call.fragment.outputs[0], command)
 
-    def subcall(self, brownieContract: brownie.Contract, func_name, *args):
+    def subcall(self, brownieContract: brownie.Contract, func_name, *args, position: int = None):
         """
         * Adds a call to a subplan. This has the effect of instantiating a nested instance of the weiroll
         * interpreter, and is commonly used for functionality such as flashloans, control flow, or anywhere
@@ -520,15 +524,15 @@ class WeirollPlanner:
         contract = WeirollContract.createContract(brownieContract)
         func = getattr(contract, func_name)
         func_call = func(*args)
-        return self.addSubplan(func_call)
+        return self.addSubplan(func_call, position)
 
-    def subdelegatecall(self, brownieContract: brownie.Contract, func_name, *args):
+    def subdelegatecall(self, brownieContract: brownie.Contract, func_name, *args, position: int = None):
         contract = WeirollContract.createLibrary(brownieContract)
         func = getattr(contract, func_name)
         func_call = func(*args)
-        return self.addSubplan(func_call)
+        return self.addSubplan(func_call, position)
 
-    def addSubplan(self, call: FunctionCall):
+    def addSubplan(self, call: FunctionCall, position: int = None):
         hasSubplan = False
         hasState = False
 
@@ -546,7 +550,10 @@ class WeirollPlanner:
         if call.fragment.outputs and len(call.fragment.outputs) == 1 and call.fragment.outputs[0] != "bytes[]":
             raise ValueError("Subplans must return a bytes[] replacement state or nothing")
 
-        self.commands.append(Command(call, CommandType.SUBPLAN))
+        if position is not None:
+            self.commands.insert(position, Command(call, CommandType.SUBPLAN))
+        else:
+            self.commands.append(Command(call, CommandType.SUBPLAN))
 
     def replaceState(self, call: FunctionCall):
         """

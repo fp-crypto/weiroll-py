@@ -299,6 +299,17 @@ class WeirollContract:
                 # make the plan helper function available on self
                 setattr(self, name, plan_fn)
                 self.functionsByUniqueName[name] = plan_fn
+            else:
+                # define a new function which will use brownie' get_fn_from_args
+                # to decide which plan_fn to route to
+                def overload(*args, fn_name=name):
+                    overload_method = self.brownieContract.__getattribute__(fn_name)
+                    method = overload_method._get_fn_from_args(args)
+                    signature = method.signature
+                    plan_fn = self.functions[signature]
+                    return plan_fn(*args)
+
+                setattr(self, name, overload)
 
             # attach full signatures (for methods with duplicate names)
             for selector in selectors:
@@ -309,6 +320,7 @@ class WeirollContract:
                 plan_fn = self.functions[selector]
 
                 self.functionsBySignature[signature] = plan_fn
+
 
     @classmethod
     @cache

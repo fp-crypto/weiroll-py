@@ -3,7 +3,7 @@ name: Lint
 on:
   push:
     branches:
-    - master
+    - main
     - develop
   pull_request:
 
@@ -70,24 +70,13 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Set pip cache directory path
-        id: pip-cache-dir-path
-        run: |
-            echo "::set-output name=dir::$(pip cache dir)"
-
-      - name: Restore pip cache
-        uses: actions/cache@v2
-        id: pip-cache
+     - name: Poetry
+        uses: abatilo/actions-poetry@v2.0.0
         with:
-          path: |
-            ${{ steps.pip-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
-            ${{ runner.os }}-pip-
+          poetry-version: 1.1.13
 
-      - name: Install poetry
-        run: pip install --user poetry
+      - name: Install dependencies
+        run: poetry install
 
       - name: Run black
         run: poetry run black --check --include "(tests|scripts)" .

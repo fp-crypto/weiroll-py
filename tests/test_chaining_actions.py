@@ -27,7 +27,7 @@ def test_chaining_action(weiroll_vm, tuple_helper):
     w_crv_yfi_weth = WeirollContract.createContract(crv_yfi_weth)
 
     # One inch section, eth->yfi
-    planner.add(w_weth.approve(one_inch.address, 2**256-1))
+    planner.add(w_weth.approve(one_inch.address, 2 ** 256 - 1))
     swap_url = "https://api.1inch.io/v4.0/1/swap"
     r = requests.get(
         swap_url,
@@ -60,11 +60,12 @@ def test_chaining_action(weiroll_vm, tuple_helper):
     yfi_int_amount = ReturnValue('uint256', one_inch_amount.command)
 
     # Now that we have the yfi amount, let's do curve logic
-    planner.add(w_weth.approve(w_curve_swap.address, 2**256-1))
-    planner.add(w_yfi.approve(w_curve_swap.address, 2**256-1))
+    planner.add(w_weth.approve(w_curve_swap.address, 2 ** 256 - 1))
+    planner.add(w_yfi.approve(w_curve_swap.address, 2 ** 256 - 1))
 
+    params = [Wei("5 ether"), yfi_int_amount]
     curve_ret = planner.add(
-        w_curve_swap.add_liquidity([Wei("5 ether"), yfi_int_amount], 0)
+        w_curve_swap.add_liquidity(params, 0)
     )
 
     planner.add(w_crv_yfi_weth.transfer(w_tuple_helper.address, curve_ret))
@@ -75,3 +76,34 @@ def test_chaining_action(weiroll_vm, tuple_helper):
     )
 
     assert crv_yfi_weth.balanceOf(w_tuple_helper.address) > 0
+
+
+def test_return_value(weiroll_vm, tuple_helper):
+    yfi = Contract("0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e")
+    crv_yfi_weth = Contract("0x29059568bB40344487d62f7450E78b8E6C74e0e5")
+    curve_swap = Contract("0xC26b89A667578ec7b3f11b2F98d6Fd15C07C54ba")
+    yfi_whale = accounts.at("0xfeb4acf3df3cdea7399794d0869ef76a6efaff52", force=True)
+
+    # Planner and all weiroll contracts
+    planner = WeirollPlanner(weiroll_vm)
+    w_yfi = WeirollContract.createContract(yfi)
+    w_curve_swap = WeirollContract.createContract(curve_swap)
+
+    yfi.transfer(weiroll_vm.address, 10 ** 18, {'from': yfi_whale})
+
+    w_yfi_bal = planner.call(yfi, "balanceOf", weiroll_vm.address)
+    # Now that we have the yfi amount, let's do curve logic
+    planner.add(w_yfi.approve(w_curve_swap.address, 2 ** 256 - 1))
+
+    params = [0, w_yfi_bal]
+    planner.add(
+        w_curve_swap.add_liquidity(params, 0)
+    )
+
+    cmds, state = planner.plan()
+    weiroll_tx = weiroll_vm.execute(
+        cmds, state, {"from": yfi_whale, "gas_limit": 8_000_000, "gas_price": 0}
+    )
+
+    assert crv_yfi_weth.balanceOf(weiroll_vm.address) > 0
+    assert False

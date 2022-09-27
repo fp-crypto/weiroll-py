@@ -287,7 +287,7 @@ def test_sanity():
     print(func_name)
     print(params)
 
-    one_inch.swap(params[0], params[1], params[2], {'from': th})
+    one_inch.swap(params[0], params[1], params[2], {"from": th, "gas_price": 0})
 
     assert crv.balanceOf(th) > 0
     print(crv.balanceOf(th))

@@ -197,8 +197,8 @@ def test_one_inch_replace_calldata_with_weiroll():
 
     weth.approve(th.address, Wei("10 ether"), {"from": whale})
     weth.transfer(th.address, Wei("10 ether"), {"from": whale})
-    w_weth_balance = planner.call(weth, "balanceOf", th.address)
-    w_weth_balance = weiroll.ReturnValue("bytes32", w_weth_balance.command)
+    # w_weth_balance = planner.call(weth, "balanceOf", th.address)
+    # w_weth_balance = weiroll.ReturnValue("bytes32", w_weth_balance.command)
     swap_url = "https://api.1inch.io/v4.0/1/swap"
     print(th.address)
     r = requests.get(
@@ -217,25 +217,27 @@ def test_one_inch_replace_calldata_with_weiroll():
 
     assert r.ok and r.status_code == 200
     tx = r.json()["tx"]
+    router = tx["to"]
 
-    weth.approve(one_inch, 2 ** 256 - 1, {"from": th, "gas_price": 0})
+    weth.approve(router, 0, {"from": th, "gas_price": 0})
+    weth.approve(router, 2 ** 256 - 1, {"from": th, "gas_price": 0})
 
     decoded = one_inch.decode_input(tx["data"])
     func_name = decoded[0]
     params = decoded[1]
     print(func_name)
 
-    struct_layout = '(address,address,address,address,uint256,uint256,uint256,bytes)'
-    tuple_bytes = eth_abi.encode_single(struct_layout, params[1])
-    min_return = eth_abi.encode_single("uint256", 1)
-    tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_bytes, 4, w_weth_balance, True).rawValue())
-    tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_description, 5, min_return, True).rawValue())
-    tuple_description = weiroll.ReturnValue(struct_layout, tuple_description.command)
-
+    # struct_layout = '(address,address,address,address,uint256,uint256,uint256,bytes)'
+    # tuple_bytes = eth_abi.encode_single(struct_layout, params[1])
+    # min_return = eth_abi.encode_single("uint256", 1000*(10**18))
+    # tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_bytes, 4, w_weth_balance, True).rawValue())
+    # tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_description, 5, min_return, True).rawValue())
+    # tuple_description = weiroll.ReturnValue(struct_layout, tuple_description.command)
+    #
+    # params[1] = tuple_description
     w_one_inch = weiroll.WeirollContract(one_inch)
-    params[1] = tuple_description
     print(params)
-    planner.add(w_one_inch.swap(params[0], tuple_description, params[2]).rawValue())
+    planner.add(w_one_inch.swap(params[0], params[1], params[2]).rawValue())
 
     cmds, state = planner.plan()
     weiroll_tx = th.execute(

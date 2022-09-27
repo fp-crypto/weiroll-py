@@ -175,7 +175,15 @@ def test_one_inch_replace_calldata_amount_2(weiroll_vm):
     assert crv.balanceOf(weiroll_vm) > 0
     print(crv.balanceOf(weiroll_vm))
 
+
 import re
+import eth_abi
+from brownie import Contract, accounts, Wei, chain, TestableVM, convert
+from brownie.convert.datatypes import HexString
+import weiroll
+from weiroll import WeirollContract, WeirollPlanner, ReturnValue
+import requests
+
 def test_one_inch_replace_calldata_with_weiroll(weiroll_vm, tuple_helper):
     whale = accounts.at("0x57757E3D981446D585Af0D9Ae4d7DF6D64647806", force=True)
     weth = Contract("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
@@ -185,9 +193,12 @@ def test_one_inch_replace_calldata_with_weiroll(weiroll_vm, tuple_helper):
 
     planner = WeirollPlanner(weiroll_vm)
 
+    weth.approve(weiroll_vm.address, Wei("10 ether"), {"from": whale})
     weth.transfer(weiroll_vm.address, Wei("10 ether"), {"from": whale})
     w_weth_balance = planner.call(weth, "balanceOf", weiroll_vm.address)
+    w_weth_balance = weiroll.ReturnValue("bytes32", w_weth_balance.command)
     swap_url = "https://api.1inch.io/v4.0/1/swap"
+    print(weiroll_vm.address)
     r = requests.get(
         swap_url,
         params={
@@ -198,6 +209,7 @@ def test_one_inch_replace_calldata_with_weiroll(weiroll_vm, tuple_helper):
             "slippage": 5,
             "disableEstimate": "true",
             "allowPartialFill": "false",
+            "usePatching": "true"
         },
     )
 
@@ -210,29 +222,20 @@ def test_one_inch_replace_calldata_with_weiroll(weiroll_vm, tuple_helper):
     func_name = decoded[0]
     params = decoded[1]
     calldata = params[2]
-
+    print(func_name)
     # change inputs
     # amount_in
-    params[1][4] = w_weth_balance
-    # minOut
-    params[1][5] = 1
-
-    # TODO: I believe calldata can also be weirolled like this (?)
-    # calldata = params[3]
-    # # to string
-    # calldata_str = calldata.hex()
-    # hex10 = HexString(hex(Wei("10 ether")), "bytes32").hex()
-    #
-    # indices = [m.start() for m in re.finditer(hex10, calldata_str)]
-    # for i in indices: 
-    # w_calldata = planner.add(w_tuple_helper.replaceElement(calldata, i, w_weth_balance,Fales))
-    # params[2] = w_calldata
+    struct_layout = '(address,address,address,address,uint256,uint256,uint256,bytes)'
+    tuple_bytes = eth_abi.encode_single(struct_layout, params[1])
+    one_wei = eth_abi.encode_single("uint256", 1)
+    tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_bytes, 4, w_weth_balance, True).rawValue())
+    tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_bytes, 5, one_wei, True).rawValue())
+    tuple_description = weiroll.ReturnValue(struct_layout, tuple_description.command)
 
     w_one_inch = weiroll.WeirollContract(one_inch)
-    planner.add(w_one_inch.swap(params[0], params[1], params[2]))
-    # TODO: not sure why the w_weth_balance part isn't working
-    # TODO: EncodingTypeError: Value `ReturnValue(param...` of type <class 'weiroll.ReturnValue'> cannot be encoded by UnsignedIntegerEncoder
-
+    params[1] = tuple_description
+    print(params)
+    planner.add(w_one_inch.swap(params[0], tuple_description, params[2]).rawValue())
 
     cmds, state = planner.plan()
     weiroll_tx = weiroll_vm.execute(

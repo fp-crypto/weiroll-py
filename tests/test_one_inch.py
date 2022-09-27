@@ -184,14 +184,15 @@ import weiroll
 from weiroll import WeirollContract, WeirollPlanner, ReturnValue
 import requests
 
-def test_one_inch_replace_calldata_with_weiroll(weiroll_vm, tuple_helper):
+def test_one_inch_replace_calldata_with_weiroll():
     whale = accounts.at("0x57757E3D981446D585Af0D9Ae4d7DF6D64647806", force=True)
     weth = Contract("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
     crv = Contract("0xD533a949740bb3306d119CC777fa900bA034cd52")
     one_inch = Contract("0x1111111254fb6c44bAC0beD2854e76F90643097d")
     tuple_helper = Contract("0x06706E366159cEfD3789184686da5cC3f47fB4a2")
     w_tuple_helper = weiroll.WeirollContract(tuple_helper)
-    th = accounts.at("0xcADBA199F3AC26F67f660C89d43eB1820b7f7a3b", force=True)
+    th = Contract("0xcADBA199F3AC26F67f660C89d43eB1820b7f7a3b")
+    ms = accounts.at("0x2C01B4AD51a67E2d8F02208F54dF9aC4c0B778B6", force=True)
     planner = WeirollPlanner(th)
 
     weth.approve(th.address, Wei("10 ether"), {"from": whale})
@@ -238,7 +239,7 @@ def test_one_inch_replace_calldata_with_weiroll(weiroll_vm, tuple_helper):
 
     cmds, state = planner.plan()
     weiroll_tx = th.execute(
-        cmds, state, {"from": whale, "gas_limit": 8_000_000, "gas_price": 0}
+        cmds, state, {"from": ms, "gas_limit": 8_000_000, "gas_price": 0}
     )
 
     assert crv.balanceOf(th) > 0

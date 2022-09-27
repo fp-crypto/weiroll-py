@@ -221,15 +221,13 @@ def test_one_inch_replace_calldata_with_weiroll(weiroll_vm, tuple_helper):
     decoded = one_inch.decode_input(tx["data"])
     func_name = decoded[0]
     params = decoded[1]
-    calldata = params[2]
     print(func_name)
-    # change inputs
-    # amount_in
+
     struct_layout = '(address,address,address,address,uint256,uint256,uint256,bytes)'
     tuple_bytes = eth_abi.encode_single(struct_layout, params[1])
-    one_wei = eth_abi.encode_single("uint256", 1)
+    min_return = eth_abi.encode_single("uint256", 1)
     tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_bytes, 4, w_weth_balance, True).rawValue())
-    tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_bytes, 5, one_wei, True).rawValue())
+    tuple_description = planner.add(w_tuple_helper.replaceElement(tuple_bytes, 5, min_return, True).rawValue())
     tuple_description = weiroll.ReturnValue(struct_layout, tuple_description.command)
 
     w_one_inch = weiroll.WeirollContract(one_inch)

@@ -218,7 +218,7 @@ def test_one_inch_replace_calldata_with_weiroll():
     assert r.ok and r.status_code == 200
     tx = r.json()["tx"]
     router = tx["to"]
-
+    print(f'router: {router}')
     weth.approve(router, 0, {"from": th, "gas_price": 0})
     weth.approve(router, 2 ** 256 - 1, {"from": th, "gas_price": 0})
 
@@ -243,6 +243,51 @@ def test_one_inch_replace_calldata_with_weiroll():
     weiroll_tx = th.execute(
         cmds, state, {"from": ms, "gas_limit": 8_000_000, "gas_price": 0}
     )
+
+    assert crv.balanceOf(th) > 0
+    print(crv.balanceOf(th))
+
+def test_sanity():
+    whale = accounts.at("0x57757E3D981446D585Af0D9Ae4d7DF6D64647806", force=True)
+    weth = Contract("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
+    crv = Contract("0xD533a949740bb3306d119CC777fa900bA034cd52")
+    one_inch = Contract("0x1111111254fb6c44bAC0beD2854e76F90643097d")
+    th = Contract("0xcADBA199F3AC26F67f660C89d43eB1820b7f7a3b")
+
+    weth.approve(th.address, Wei("10 ether"), {"from": whale})
+    weth.transfer(th.address, Wei("10 ether"), {"from": whale})
+
+    swap_url = "https://api.1inch.io/v4.0/1/swap"
+    print(th.address)
+    r = requests.get(
+        swap_url,
+        params={
+            "fromTokenAddress": weth.address,
+            "toTokenAddress": crv.address,
+            "amount": Wei("10 ether"),
+            "fromAddress": th.address,
+            "slippage": 5,
+            "disableEstimate": "true",
+            "allowPartialFill": "false",
+            "usePatching": "true"
+        },
+    )
+
+    assert r.ok and r.status_code == 200
+    tx = r.json()["tx"]
+    router = tx["to"]
+    print(f'router: {router}')
+
+    weth.approve(router, 0, {"from": th, "gas_price": 0})
+    weth.approve(router, 2 ** 256 - 1, {"from": th, "gas_price": 0})
+
+    decoded = one_inch.decode_input(tx["data"])
+    func_name = decoded[0]
+    params = decoded[1]
+    print(func_name)
+    print(params)
+
+    one_inch.swap(params[0], params[1], params[2], {'from': th})
 
     assert crv.balanceOf(th) > 0
     print(crv.balanceOf(th))

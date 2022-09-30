@@ -52,7 +52,6 @@ def test_weiroll_planner_simple_program(alice, math):
     assert state[0] == eth_abi.encode_single("uint", 1)
     assert state[1] == eth_abi.encode_single("uint", 2)
 
-
 def test_weiroll_deduplicates_identical_literals(alice, math):
     planner = weiroll.WeirollPlanner(alice)
     planner.add(math.add(1, 1))

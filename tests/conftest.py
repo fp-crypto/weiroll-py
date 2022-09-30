@@ -96,3 +96,7 @@ def tuple_helper_yul(alice, TupleHelperYul):
 @pytest.fixture(scope="module")
 def tuple_helper_vy(alice, TupleHelperVy):
     yield alice.deploy(TupleHelperVy)
+
+@pytest.fixture(scope="module")
+def router_like(alice, RouterLike):
+    yield alice.deploy(RouterLike)

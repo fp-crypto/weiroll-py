@@ -110,4 +110,4 @@ If a subplan returns updated state, return values created in a subplanner, such 
 
 ## Credits
 
-- @WyseNynja for the original implementation
+- [@WyseNynja](https://github.com/WyseNynja) for the original implementation

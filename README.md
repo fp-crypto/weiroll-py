@@ -1,6 +1,7 @@
 # weiroll-py
 
-weiroll-py is a planner for the operation-chaining/scripting language [weiroll](https://github.com/weiroll/weiroll) inspried by [weiroll.js](https://github.com/weiroll/weiroll.js).
+weiroll-py is a planner for the operation-chaining/scripting language [weiroll](https://github.com/weiroll/weiroll).
+weiroll-py is inspired by [weiroll.js](https://github.com/weiroll/weiroll.js).
 
 It provides an easy-to-use API for generating weiroll programs that can then be passed to any compatible implementation.
 

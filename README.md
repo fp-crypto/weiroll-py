@@ -8,7 +8,9 @@ It provides an easy-to-use API for generating weiroll programs that can then be 
 ## Installation
 
 ```
-pip install weiroll-py
+pip install weiroll-py==0.2.0
+
+where 0.2.0 is the latest version.
 ```
 
 ## Usage

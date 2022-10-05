@@ -94,10 +94,10 @@ To make a subplan, construct the operations that should take place inside the ne
 For example, suppose you want to call a nested instance to do some math:
 
 ```python
-subplanner = new WeirollPlanner()
+subplanner = WeirollPlanner()
 sum = subplanner.add(Math.add(1, 2))
 
-planner = new Planner()
+planner = WeirollPlanner()
 planner.addSubplan(Weiroll.execute(subplanner, subplanner.state))
 planner.add(events.logUint(sum))
 

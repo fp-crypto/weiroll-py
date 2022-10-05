@@ -108,6 +108,10 @@ Subplan functions must specify which argument receives the current state using t
 
 If a subplan returns updated state, return values created in a subplanner, such as `sum` above, can be referenced in the outer scope, and even in other subplans, as long as they are referenced after the command that produces them. Subplans that do not return updated state are read-only, and return values defined inside them cannot be referenced outside them.
 
+## More examples
+
+Review [tests](/tests) for more examples.
+
 ## Credits
 
 - [@WyseNynja](https://github.com/WyseNynja) for the original implementation

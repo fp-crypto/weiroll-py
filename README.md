@@ -9,9 +9,9 @@ It provides an easy-to-use API for generating weiroll programs that can then be 
 
 ```
 pip install weiroll-py==0.2.0
+```
 
 where 0.2.0 is the latest version.
-```
 
 ## Usage
 

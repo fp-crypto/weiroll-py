@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "weiroll-py"
-version = "0.2.0"
+version = "0.2.1"
 description = "Build weiroll transactions with brownie"
 authors = ["FP <FP@no-email.com>"]
 license = "MIT"
@@ -9,7 +9,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.10"
+python = ">=3.9,<3.11"
 eth-brownie = "^v1.17"
 
 [tool.poetry.dev-dependencies]

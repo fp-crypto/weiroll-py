@@ -4,6 +4,7 @@ version = "0.2.1"
 description = "Build weiroll transactions with brownie"
 authors = ["FP <FP@no-email.com>"]
 license = "MIT"
+repository = "https://github.com/fp-crypto/weiroll-py"
 packages = [
     { include = "./weiroll.py" },
 ]

@@ -29,6 +29,8 @@ abstract contract VM {
         self = address(this);
     }
 
+    function dispatch(bytes memory inputs) internal virtual returns (bool success, bytes memory ret) {}
+
     function _execute(bytes32[] calldata commands, bytes[] memory state)
       internal returns (bytes[] memory)
     {
@@ -61,14 +63,28 @@ abstract contract VM {
                     )
                 );
             } else if (flags & FLAG_CT_MASK == FLAG_CT_CALL) {
-                (success, outdata) = address(uint160(uint256(command))).call( // target
-                    // inputs
-                    state.buildInputs(
-                        //selector
-                        bytes4(command),
-                        indices
-                    )
-                );
+                address _target = address(uint160(uint256(command)));
+                bytes memory inputs = state.buildInputs(
+                    //selector
+                    bytes4(command),
+                    indices
+                ); 
+                success = false;
+
+                if (_target == address(this)) {
+                    (success, outdata) = dispatch(inputs);
+                }
+
+                if (!success) {
+                    (success, outdata) = _target.call( // target
+                        // inputs
+                        state.buildInputs(
+                            //selector
+                            bytes4(command),
+                            indices
+                        )
+                    );
+                }
             } else if (flags & FLAG_CT_MASK == FLAG_CT_STATICCALL) {
                 (success, outdata) = address(uint160(uint256(command))).staticcall( // target
                     // inputs

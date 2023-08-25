@@ -13,7 +13,7 @@ compiler:
     version: 0.8.11
     remappings:
       - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.1.0"
-
+    viaIR: true
     optimizer:
       details:
           yul: true

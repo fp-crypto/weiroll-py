@@ -12,7 +12,7 @@ contract TestableVMWithMath is VM {
         return _execute(commands, state);
     }
 
-    function sum(uint256 a, uint256 b) external pure returns (uint256) {
+    function sum(uint256 a, uint256 b) public pure returns (uint256) {
         return a + b;
     }
 
@@ -30,7 +30,7 @@ contract TestableVMWithMath is VM {
                 a := mload(add(inputs, 36))
                 b := mload(add(inputs, 68))
             }
-            uint256 res = this.sum(a, b);
+            uint256 res = sum(a, b);
             _ret = new bytes(32);
             assembly {
                 mstore(add(_ret, 32), res)

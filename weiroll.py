@@ -167,7 +167,8 @@ class CommandFlags(IntFlag):
     EXTENDED_COMMAND = 0x40
     # Specifies that the return value of this call should be wrapped in a `bytes`. Internal use only.
     TUPLE_RETURN = 0x80
-
+    # Specifies to use fast local dispatcher. Custom flag.
+    LOCAL_DISPATCH = 0x20
 
 class FunctionCall:
     def __init__(self, contract, flags: CommandFlags, fragment: FunctionFragment, args, callvalue=0):
@@ -215,6 +216,18 @@ class FunctionCall:
         return self.__class__(
             self.contract,
             (self.flags & ~CommandFlags.CALLTYPE_MASK) | CommandFlags.STATICCALL,
+            self.fragment,
+            self.args,
+            self.callvalue,
+        )
+
+    def localDispatch(self):
+        """
+        Returns a new [[FunctionCall]] with local dispatch specified 
+        """
+        return self.__class__(
+            self.contract,
+            self.flags | CommandFlags.LOCAL_DISPATCH,
             self.fragment,
             self.args,
             self.callvalue,

@@ -11,7 +11,7 @@ from brownie.convert.utils import get_type_strings
 from brownie.network.contract import OverloadedMethod
 from hexbytes import HexBytes
 
-MAX_UINT256 = 2**256-1
+MAX_UINT256 = 2 ** 256 - 1
 
 # TODO: real types?
 Value = namedtuple("Value", "param")
@@ -24,7 +24,6 @@ def simple_type_strings(inputs) -> tuple[Optional[list[str]], Optional[list[int]
 
     related: https://github.com/weiroll/weiroll.js/pull/34
     """
-
 
     if not inputs:
         return None, None
@@ -170,8 +169,16 @@ class CommandFlags(IntFlag):
     # Specifies to use fast local dispatcher. Custom flag.
     LOCAL_DISPATCH = 0x20
 
+
 class FunctionCall:
-    def __init__(self, contract, flags: CommandFlags, fragment: FunctionFragment, args, callvalue=0):
+    def __init__(
+        self,
+        contract,
+        flags: CommandFlags,
+        fragment: FunctionFragment,
+        args,
+        callvalue=0,
+    ):
         self.contract = contract
         self.flags = flags
         self.fragment = fragment
@@ -223,7 +230,7 @@ class FunctionCall:
 
     def localDispatch(self):
         """
-        Returns a new [[FunctionCall]] with local dispatch specified 
+        Returns a new [[FunctionCall]] with local dispatch specified
         """
         return self.__class__(
             self.contract,
@@ -334,7 +341,6 @@ class WeirollContract:
 
                 self.functionsBySignature[signature] = plan_fn
 
-
     @classmethod
     @cache
     def createContract(
@@ -419,31 +425,11 @@ def padArray(a, length, padValue) -> list:
 
 
 class WeirollPlanner:
-    def __init__(self, clone):
+    def __init__(self, address: str | None = None, auto_local_dispatch: bool = False):
         self.state = StateValue()
         self.commands: list[Command] = []
-        self.unlimited_approvals = set()
-
-        self.clone = clone
-
-    def approve(self, token: brownie.Contract, spender: str, wei_needed, approve_wei=None) -> Optional[ReturnValue]:
-        key = (token, self.clone, spender)
-
-        if approve_wei is None:
-            approve_wei = MAX_UINT256
-
-        if key in self.unlimited_approvals and approve_wei != 0:
-            # we already planned an infinite approval for this token (and we aren't trying to set the approval to 0)
-            return
-
-        # check current allowance
-        if token.allowance(self.clone, spender) >= wei_needed:
-            return
-
-        if approve_wei == MAX_UINT256:
-            self.unlimited_approvals.add(key)
-
-        return self.call(token, "approve", spender, approve_wei)
+        self.address: str | None = address
+        self.auto_local_dispatch = auto_local_dispatch
 
     def call(self, brownieContract: brownie.Contract, func_name, *args):
         """func_name can be just the name, or it can be the full signature.
@@ -493,6 +479,20 @@ class WeirollPlanner:
         * @param call The [[FunctionCall]] to add to the planner
         * @returns An object representing the return value of the call, or null if it does not return a value.
         """
+
+        # Use auto local dispatch if:
+        #   - its enabled
+        #   - the planner has a vm address set
+        #   - the FunctionCall is a Call command
+        #   - the targeted contract is the weiroll vm
+        if (
+            self.auto_local_dispatch
+            and self.address is not None
+            and (call.flags & CommandFlags.CALLTYPE_MASK) == CommandFlags.CALL
+            and call.contract == self.address
+        ):
+            call = call.localDispatch()
+
         command = Command(call, CommandType.CALL)
         self.commands.append(command)
 

@@ -123,9 +123,7 @@ def test_weiroll_takes_dynamic_arguments(alice, strings):
     commands, state = planner.plan()
 
     assert len(commands) == 1
-    assert commands[0] == weiroll.hexConcat(
-        "0x367bbd780080ffffffffffff", strings.address
-    )
+    assert commands[0] == weiroll.hexConcat("0x367bbd780080ffffffffffff", strings.address)
 
     print(state)
     assert len(state) == 1
@@ -138,9 +136,7 @@ def test_weiroll_returns_dynamic_arguments(alice, strings):
     commands, state = planner.plan()
 
     assert len(commands) == 1
-    assert commands[0] == weiroll.hexConcat(
-        "0xd824ccf3008081ffffffffff", strings.address
-    )
+    assert commands[0] == weiroll.hexConcat("0xd824ccf3008081ffffffffff", strings.address)
 
     assert len(state) == 2
     assert state[0] == eth_abi.encode_single("string", "Hello, ")
@@ -154,12 +150,8 @@ def test_weiroll_takes_dynamic_argument_from_a_return_value(alice, strings):
     commands, state = planner.plan()
 
     assert len(commands) == 2
-    assert commands[0] == weiroll.hexConcat(
-        "0xd824ccf3008081ffffffff81", strings.address
-    )
-    assert commands[1] == weiroll.hexConcat(
-        "0x367bbd780081ffffffffffff", strings.address
-    )
+    assert commands[0] == weiroll.hexConcat("0xd824ccf3008081ffffffff81", strings.address)
+    assert commands[1] == weiroll.hexConcat("0x367bbd780081ffffffffffff", strings.address)
 
     assert len(state) == 2
     assert state[0] == eth_abi.encode_single("string", "Hello, ")
@@ -179,9 +171,7 @@ def test_weiroll_func_takes_and_replaces_current_state(alice, testContract):
     commands, state = planner.plan()
 
     assert len(commands) == 1
-    assert commands[0] == weiroll.hexConcat(
-        "0x08f389c800fefffffffffffe", testContract.address
-    )
+    assert commands[0] == weiroll.hexConcat("0x08f389c800fefffffffffffe", testContract.address)
 
     assert len(state) == 0
 
@@ -194,9 +184,7 @@ def test_weiroll_supports_subplan(alice, math, subplanContract):
     planner.addSubplan(subplanContract.execute(subplanner, subplanner.state))
 
     commands, state = planner.plan()
-    assert commands == [
-        weiroll.hexConcat("0xde792d5f0082fefffffffffe", subplanContract.address)
-    ]
+    assert commands == [weiroll.hexConcat("0xde792d5f0082fefffffffffe", subplanContract.address)]
 
     assert len(state) == 3
     assert state[0] == eth_abi.encode_single("uint", 1)
@@ -216,9 +204,7 @@ def test_weiroll_subplan_allows_return_in_parent_scope(alice, math, subplanContr
     commands, _ = planner.plan()
     assert len(commands) == 2
     # Invoke subplanner
-    assert commands[0] == weiroll.hexConcat(
-        "0xde792d5f0083fefffffffffe", subplanContract.address
-    )
+    assert commands[0] == weiroll.hexConcat("0xde792d5f0083fefffffffffe", subplanContract.address)
     # sum + 3
     assert commands[1] == weiroll.hexConcat("0x771602f7000102ffffffffff", math.address)
 
@@ -237,12 +223,8 @@ def test_weiroll_return_values_across_scopes(alice, math, subplanContract):
     commands, state = planner.plan()
 
     assert len(commands) == 2
-    assert commands[0] == weiroll.hexConcat(
-        "0xde792d5f0083fefffffffffe", subplanContract.address
-    )
-    assert commands[1] == weiroll.hexConcat(
-        "0xde792d5f0084fefffffffffe", subplanContract.address
-    )
+    assert commands[0] == weiroll.hexConcat("0xde792d5f0083fefffffffffe", subplanContract.address)
+    assert commands[1] == weiroll.hexConcat("0xde792d5f0084fefffffffffe", subplanContract.address)
 
     assert len(state) == 5
     # TODO: javascript tests were more complex than this
@@ -266,43 +248,29 @@ def test_weiroll_add_subplan_needs_args(alice, math, subplanContract):
 
     planner = weiroll.WeirollPlanner(alice)
 
-    with pytest.raises(
-        ValueError, match="Subplans must take planner and state arguments"
-    ):
+    with pytest.raises(ValueError, match="Subplans must take planner and state arguments"):
         planner.addSubplan(subplanContract.execute(subplanner, []))
 
-    with pytest.raises(
-        ValueError, match="Subplans must take planner and state arguments"
-    ):
+    with pytest.raises(ValueError, match="Subplans must take planner and state arguments"):
         planner.addSubplan(subplanContract.execute([], subplanner.state))
 
 
-def test_weiroll_doesnt_allow_multiple_subplans_per_call(
-    alice, math, multiSubplanContract
-):
+def test_weiroll_doesnt_allow_multiple_subplans_per_call(alice, math, multiSubplanContract):
     subplanner = weiroll.WeirollPlanner(alice)
     subplanner.add(math.add(1, 2))
 
     planner = weiroll.WeirollPlanner(alice)
     with pytest.raises(ValueError, match="Subplans can only take one planner argument"):
-        planner.addSubplan(
-            multiSubplanContract.execute(subplanner, subplanner, subplanner.state)
-        )
+        planner.addSubplan(multiSubplanContract.execute(subplanner, subplanner, subplanner.state))
 
 
-def test_weiroll_doesnt_allow_state_array_per_call(
-    alice, math, multiStateSubplanContract
-):
+def test_weiroll_doesnt_allow_state_array_per_call(alice, math, multiStateSubplanContract):
     subplanner = weiroll.WeirollPlanner(alice)
     subplanner.add(math.add(1, 2))
 
     planner = weiroll.WeirollPlanner(alice)
     with pytest.raises(ValueError, match="Subplans can only take one state argument"):
-        planner.addSubplan(
-            multiStateSubplanContract.execute(
-                subplanner, subplanner.state, subplanner.state
-            )
-        )
+        planner.addSubplan(multiStateSubplanContract.execute(subplanner, subplanner.state, subplanner.state))
 
 
 def test_weiroll_subplan_has_correct_return_type(alice, math, badSubplanContract):
@@ -335,9 +303,7 @@ def test_subplans_without_returns(alice, math, readonlySubplanContract):
     commands, _ = planner.plan()
 
     assert len(commands) == 1
-    commands[0] == weiroll.hexConcat(
-        "0xde792d5f0082feffffffffff", readonlySubplanContract.address
-    )
+    commands[0] == weiroll.hexConcat("0xde792d5f0082feffffffffff", readonlySubplanContract.address)
 
 
 def test_read_only_subplans_requirements(alice, math, readonlySubplanContract):
@@ -355,9 +321,7 @@ def test_read_only_subplans_requirements(alice, math, readonlySubplanContract):
 
 @pytest.mark.xfail(reason="need to write this")
 def test_plan_with_loop(alice):
-    target_calldata = (
-        "0xc6b6816900000000000000000000000000000000000000000000054b40b1f852bda0"
-    )
+    target_calldata = "0xc6b6816900000000000000000000000000000000000000000000054b40b1f852bda0"
 
     """
     [

@@ -425,7 +425,7 @@ def padArray(a, length, padValue) -> list:
 
 
 class WeirollPlanner:
-    def __init__(self, address: str | None = None, auto_local_dispatch: bool = False):
+    def __init__(self, address: Optional[str] = None, auto_local_dispatch: bool = False):
         self.state = StateValue()
         self.commands: list[Command] = []
         self.address: str | None = address
@@ -489,7 +489,7 @@ class WeirollPlanner:
             self.auto_local_dispatch
             and self.address is not None
             and (call.flags & CommandFlags.CALLTYPE_MASK) == CommandFlags.CALL
-            and call.contract == self.address
+            and call.contract.address == self.address
         ):
             call = call.localDispatch()
 

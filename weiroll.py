@@ -32,7 +32,7 @@ def simple_type_strings(inputs) -> tuple[Optional[list[str]], Optional[list[int]
     simple_inputs = []
     simple_sizes = []
     for i in inputs:
-        if i.endswith("]") and not i.endswith("[]"):
+        if i.endswith("]") and not i.endswith("[]") and not isDynamicType(i):
             # fixed size array. cut it up
             m = re.match(r"([a-z0-9]+)\[([0-9]+)\]", i)
 

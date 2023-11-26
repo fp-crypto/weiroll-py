@@ -15,6 +15,8 @@ abstract contract VM {
     uint256 constant FLAG_EXTENDED_COMMAND = 0x40;
     uint256 constant FLAG_TUPLE_RETURN = 0x80;
 
+    uint256 constant FLAG_LOCAL_DISPATCH = 0x20; // custom local dispatch flag
+
     uint256 constant SHORT_COMMAND_FILL = 0x000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     address immutable self;
@@ -28,6 +30,8 @@ abstract contract VM {
     constructor() {
         self = address(this);
     }
+
+    function dispatch(bytes memory inputs) internal virtual returns (bool success, bytes memory ret) {}
 
     function _execute(bytes32[] calldata commands, bytes[] memory state)
       internal returns (bytes[] memory)
@@ -61,14 +65,27 @@ abstract contract VM {
                     )
                 );
             } else if (flags & FLAG_CT_MASK == FLAG_CT_CALL) {
-                (success, outdata) = address(uint160(uint256(command))).call( // target
-                    // inputs
-                    state.buildInputs(
-                        //selector
-                        bytes4(command),
-                        indices
-                    )
-                );
+                if (flags & FLAG_LOCAL_DISPATCH != 0) {
+                    address _target = address(uint160(uint256(command)));
+                    require(_target == address(this), "_execute: local dispatch must target VM.");
+                    (success, outdata) = dispatch(
+                        // inputs
+                        state.buildInputs(
+                            //selector
+                            bytes4(command),
+                            indices
+                        )
+                    );
+                } else {
+                    (success, outdata) = address(uint160(uint256(command))).call( // target
+                        // inputs
+                        state.buildInputs(
+                            //selector
+                            bytes4(command),
+                            indices
+                        )
+                    );
+                }
             } else if (flags & FLAG_CT_MASK == FLAG_CT_STATICCALL) {
                 (success, outdata) = address(uint160(uint256(command))).staticcall( // target
                     // inputs

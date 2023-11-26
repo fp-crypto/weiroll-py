@@ -23,6 +23,10 @@ def math(alice, Math):
     math_brownie = alice.deploy(Math)
     yield WeirollContract.createLibrary(math_brownie)
 
+@pytest.fixture(scope="module")
+def weiroll_vm_with_math(alice, TestableVMWithMath):
+    vm = alice.deploy(TestableVMWithMath)
+    yield vm
 
 @pytest.fixture(scope="module")
 def testContract(alice, TestContract):

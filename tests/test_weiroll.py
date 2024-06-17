@@ -5,6 +5,7 @@ from hexbytes import HexBytes
 import json
 
 import weiroll
+from weiroll import eth_abi_encode_single
 
 
 def test_weiroll_contract(math):
@@ -24,9 +25,9 @@ def test_weiroll_contract(math):
     args = result.args
     assert len(args) == 2
     assert args[0].param == "uint256"
-    assert args[0].value == eth_abi.encode_single("uint256", 1)
+    assert args[0].value == eth_abi_encode_single("uint256", 1)
     assert args[1].param == "uint256"
-    assert args[1].value == eth_abi.encode_single("uint256", 2)
+    assert args[1].value == eth_abi_encode_single("uint256", 2)
 
 
 def test_weiroll_planner_adds(alice, math):
@@ -49,8 +50,8 @@ def test_weiroll_planner_simple_program(alice, math):
     assert commands[0] == weiroll.hexConcat("0x771602f7000001ffffffffff", math.address)
 
     assert len(state) == 2
-    assert state[0] == eth_abi.encode_single("uint", 1)
-    assert state[1] == eth_abi.encode_single("uint", 2)
+    assert state[0] == eth_abi_encode_single("uint", 1)
+    assert state[1] == eth_abi_encode_single("uint", 2)
 
 
 def test_weiroll_deduplicates_identical_literals(alice, math):
@@ -59,7 +60,7 @@ def test_weiroll_deduplicates_identical_literals(alice, math):
     commands, state = planner.plan()
     assert len(commands) == 1
     assert len(state) == 1
-    assert state[0] == eth_abi.encode_single("uint", 1)
+    assert state[0] == eth_abi_encode_single("uint", 1)
 
 
 def test_weiroll_with_return_value(alice, math):
@@ -74,9 +75,9 @@ def test_weiroll_with_return_value(alice, math):
     assert commands[1] == weiroll.hexConcat("0x771602f7000102ffffffffff", math.address)
 
     assert len(state) == 3
-    assert state[0] == eth_abi.encode_single("uint", 1)
-    assert state[1] == eth_abi.encode_single("uint", 2)
-    assert state[2] == eth_abi.encode_single("uint", 3)
+    assert state[0] == eth_abi_encode_single("uint", 1)
+    assert state[1] == eth_abi_encode_single("uint", 2)
+    assert state[2] == eth_abi_encode_single("uint", 3)
 
 
 def test_weiroll_with_state_slots_for_intermediate_values(alice, math):
@@ -91,7 +92,7 @@ def test_weiroll_with_state_slots_for_intermediate_values(alice, math):
     assert commands[1] == weiroll.hexConcat("0x771602f7000001ffffffffff", math.address)
 
     assert len(state) == 2
-    assert state[0] == eth_abi.encode_single("uint", 1)
+    assert state[0] == eth_abi_encode_single("uint", 1)
     assert state[1] == b""
 
 
@@ -109,7 +110,7 @@ def test_weiroll_abi_encode_single(param, value, expected):
     expected = HexBytes(expected)
     print("expected:", expected)
 
-    literalValue = HexBytes(eth_abi.encode_single(param, value))
+    literalValue = HexBytes(eth_abi_encode_single(param, value))
     print("literalValue:", literalValue)
 
     assert literalValue == expected
@@ -129,7 +130,7 @@ def test_weiroll_takes_dynamic_arguments(alice, strings):
 
     print(state)
     assert len(state) == 1
-    assert state[0] == eth_abi.encode_single("string", test_str)
+    assert state[0] == eth_abi_encode_single("string", test_str)
 
 
 def test_weiroll_returns_dynamic_arguments(alice, strings):
@@ -143,8 +144,8 @@ def test_weiroll_returns_dynamic_arguments(alice, strings):
     )
 
     assert len(state) == 2
-    assert state[0] == eth_abi.encode_single("string", "Hello, ")
-    assert state[1] == eth_abi.encode_single("string", "world!")
+    assert state[0] == eth_abi_encode_single("string", "Hello, ")
+    assert state[1] == eth_abi_encode_single("string", "world!")
 
 
 def test_weiroll_takes_dynamic_argument_from_a_return_value(alice, strings):
@@ -162,8 +163,8 @@ def test_weiroll_takes_dynamic_argument_from_a_return_value(alice, strings):
     )
 
     assert len(state) == 2
-    assert state[0] == eth_abi.encode_single("string", "Hello, ")
-    assert state[1] == eth_abi.encode_single("string", "world!")
+    assert state[0] == eth_abi_encode_single("string", "Hello, ")
+    assert state[1] == eth_abi_encode_single("string", "world!")
 
 
 def test_weiroll_argument_counts_match(math):
@@ -199,8 +200,8 @@ def test_weiroll_supports_subplan(alice, math, subplanContract):
     ]
 
     assert len(state) == 3
-    assert state[0] == eth_abi.encode_single("uint", 1)
-    assert state[1] == eth_abi.encode_single("uint", 2)
+    assert state[0] == eth_abi_encode_single("uint", 1)
+    assert state[1] == eth_abi_encode_single("uint", 2)
     # TODO: javascript test is more complicated than this. but i think this is fine?
     assert state[2] == weiroll.hexConcat("0x771602f7000001ffffffffff", math.address)
 

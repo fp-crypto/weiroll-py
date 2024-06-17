@@ -2,16 +2,19 @@ import re
 from collections import defaultdict, namedtuple
 from enum import IntEnum, IntFlag
 from functools import cache
-from typing import Optional
+from typing import Optional, Any
+from eth_typing.abi import TypeStr
 
 import brownie
-import eth_abi
+import eth_abi.codec
+import eth_abi.grammar
 import eth_abi.packed
+from eth_abi.registry import registry
 from brownie.convert.utils import get_type_strings
 from brownie.network.contract import OverloadedMethod
 from hexbytes import HexBytes
 
-MAX_UINT256 = 2**256-1
+MAX_UINT256 = 2**256 - 1
 
 # TODO: real types?
 Value = namedtuple("Value", "param")
@@ -24,7 +27,6 @@ def simple_type_strings(inputs) -> tuple[Optional[list[str]], Optional[list[int]
 
     related: https://github.com/weiroll/weiroll.js/pull/34
     """
-
 
     if not inputs:
         return None, None
@@ -105,7 +107,9 @@ class FunctionFragment:
 
     def encode_args(self, *args):
         if len(args) != len(self.inputs):
-            raise ValueError(f"Function {self.name} has {len(self.inputs)} arguments but {len(self.args)} provided")
+            raise ValueError(
+                f"Function {self.name} has {len(self.inputs)} arguments but {len(self.args)} provided"
+            )
 
         # split up complex types into 32 byte chunks that weiroll state can handle
         args = simple_args(self.simple_sizes, args)
@@ -170,7 +174,14 @@ class CommandFlags(IntFlag):
 
 
 class FunctionCall:
-    def __init__(self, contract, flags: CommandFlags, fragment: FunctionFragment, args, callvalue=0):
+    def __init__(
+        self,
+        contract,
+        flags: CommandFlags,
+        fragment: FunctionFragment,
+        args,
+        callvalue=0,
+    ):
         self.contract = contract
         self.flags = flags
         self.fragment = fragment
@@ -191,7 +202,7 @@ class FunctionCall:
             (self.flags & ~CommandFlags.CALLTYPE_MASK) | CommandFlags.CALL_WITH_VALUE,
             self.fragment,
             self.args,
-            eth_abi.encode_single("uint", value),
+            eth_abi_encode_single("uint", value),
         )
 
     def rawValue(self):
@@ -228,11 +239,13 @@ def isDynamicType(param) -> bool:
 def encodeArg(arg, param):
     if isValue(arg):
         if arg.param != param:
-            raise ValueError(f"Cannot pass value of type ${arg.param} to input of type ${param}")
+            raise ValueError(
+                f"Cannot pass value of type ${arg.param} to input of type ${param}"
+            )
         return arg
     if isinstance(arg, WeirollPlanner):
         return SubplanValue(arg)
-    return LiteralValue(param, eth_abi.encode_single(param, arg))
+    return LiteralValue(param, eth_abi_encode_single(param, arg))
 
 
 class WeirollContract:
@@ -253,7 +266,9 @@ class WeirollContract:
     * [[Planner.addSubplan]], or [[Planner.replaceState]] to add to the sequence of calls to plan.
     """
 
-    def __init__(self, brownieContract: brownie.Contract, commandFlags: CommandFlags = 0):
+    def __init__(
+        self, brownieContract: brownie.Contract, commandFlags: CommandFlags = 0
+    ):
         self.brownieContract = brownieContract
         self.address = brownieContract.address
 
@@ -321,7 +336,6 @@ class WeirollContract:
 
                 self.functionsBySignature[signature] = plan_fn
 
-
     @classmethod
     @cache
     def createContract(
@@ -365,7 +379,9 @@ class WeirollContract:
 def buildCall(contract: WeirollContract, fragment: FunctionFragment):
     def _call(*args) -> FunctionCall:
         if len(args) != len(fragment.inputs):
-            raise ValueError(f"Function {fragment.name} has {len(fragment.inputs)} arguments but {len(args)} provided")
+            raise ValueError(
+                f"Function {fragment.name} has {len(fragment.inputs)} arguments but {len(args)} provided"
+            )
 
         # TODO: maybe this should just be fragment.encode_args()
         encodedArgs = fragment.encode_args(*args)
@@ -413,7 +429,9 @@ class WeirollPlanner:
 
         self.clone = clone
 
-    def approve(self, token: brownie.Contract, spender: str, wei_needed, approve_wei=None) -> Optional[ReturnValue]:
+    def approve(
+        self, token: brownie.Contract, spender: str, wei_needed, approve_wei=None
+    ) -> Optional[ReturnValue]:
         key = (token, self.clone, spender)
 
         if approve_wei is None:
@@ -485,7 +503,9 @@ class WeirollPlanner:
 
         for arg in call.args:
             if isinstance(arg, SubplanValue):
-                raise ValueError("Only subplans can have arguments of type SubplanValue")
+                raise ValueError(
+                    "Only subplans can have arguments of type SubplanValue"
+                )
 
         if call.flags & CommandFlags.TUPLE_RETURN:
             return ReturnValue("bytes", command)
@@ -555,8 +575,14 @@ class WeirollPlanner:
                 hasState = True
         if not hasSubplan or not hasState:
             raise ValueError("Subplans must take planner and state arguments")
-        if call.fragment.outputs and len(call.fragment.outputs) == 1 and call.fragment.outputs[0] != "bytes[]":
-            raise ValueError("Subplans must return a bytes[] replacement state or nothing")
+        if (
+            call.fragment.outputs
+            and len(call.fragment.outputs) == 1
+            and call.fragment.outputs[0] != "bytes[]"
+        ):
+            raise ValueError(
+                "Subplans must return a bytes[] replacement state or nothing"
+            )
 
         self.commands.append(Command(call, CommandType.SUBPLAN))
 
@@ -568,7 +594,9 @@ class WeirollPlanner:
         * so it may produce invalid plans if you don't know what you're doing.
         * @param call The [[FunctionCall]] to execute
         """
-        if (call.fragment.outputs and len(call.fragment.outputs) != 1) or call.fragment.outputs[0] != "bytes[]":
+        if (
+            call.fragment.outputs and len(call.fragment.outputs) != 1
+        ) or call.fragment.outputs[0] != "bytes[]":
             raise ValueError("Function replacing state must return a bytes[]")
         self.commands.append(Command(call, CommandType.RAWCALL))
 
@@ -585,7 +613,10 @@ class WeirollPlanner:
         # Build visibility maps
         for command in self.commands:
             inargs = command.call.args
-            if command.call.flags & CommandFlags.CALLTYPE_MASK == CommandFlags.CALL_WITH_VALUE:
+            if (
+                command.call.flags & CommandFlags.CALLTYPE_MASK
+                == CommandFlags.CALL_WITH_VALUE
+            ):
                 if not command.call.callvalue:
                     raise ValueError("Call with value must have a value parameter")
                 inargs = [command.call.callvalue] + inargs
@@ -593,7 +624,9 @@ class WeirollPlanner:
             for arg in inargs:
                 if isinstance(arg, ReturnValue):
                     if not arg.command in seen:
-                        raise ValueError(f"Return value from '{arg.command.call.fragment.name}' is not visible here")
+                        raise ValueError(
+                            f"Return value from '{arg.command.call.fragment.name}' is not visible here"
+                        )
                     commandVisibility[arg.command] = command
                 elif isinstance(arg, LiteralValue):
                     literalVisibility[arg.value] = command
@@ -602,7 +635,9 @@ class WeirollPlanner:
                     if not command.call.fragment.outputs:
                         # Read-only subplan; return values aren't visible externally
                         subplanSeen = set(seen)
-                    arg.planner._preplan(commandVisibility, literalVisibility, subplanSeen, planners)
+                    arg.planner._preplan(
+                        commandVisibility, literalVisibility, subplanSeen, planners
+                    )
                 elif not isinstance(arg, StateValue):
                     raise ValueError(f"Unknown function argument type '{arg}'")
 
@@ -613,7 +648,10 @@ class WeirollPlanner:
     def _buildCommandArgs(self, command: Command, returnSlotMap, literalSlotMap, state):
         # Build a list of argument value indexes
         inargs = command.call.args
-        if command.call.flags & CommandFlags.CALLTYPE_MASK == CommandFlags.CALL_WITH_VALUE:
+        if (
+            command.call.flags & CommandFlags.CALLTYPE_MASK
+            == CommandFlags.CALL_WITH_VALUE
+        ):
             if not command.call.callvalue:
                 raise ValueError("Call with value must have a value parameter")
             inargs = [command.call.callvalue] + inargs
@@ -642,15 +680,21 @@ class WeirollPlanner:
         for command in self.commands:
             if command.type == CommandType.SUBPLAN:
                 # find the subplan
-                subplanner = next(arg for arg in command.call.args if isinstance(arg, SubplanValue)).planner
+                subplanner = next(
+                    arg for arg in command.call.args if isinstance(arg, SubplanValue)
+                ).planner
                 subcommands = subplanner._buildCommands(ps)
-                ps.state.append(HexBytes(eth_abi.encode_single("bytes32[]", subcommands))[32:])
+                ps.state.append(
+                    HexBytes(eth_abi_encode_single("bytes32[]", subcommands))[32:]
+                )
                 # The slot is no longer needed after this command
                 ps.freeSlots.append(len(ps.state) - 1)
 
             flags = command.call.flags
 
-            args = self._buildCommandArgs(command, ps.returnSlotMap, ps.literalSlotMap, ps.state)
+            args = self._buildCommandArgs(
+                command, ps.returnSlotMap, ps.literalSlotMap, ps.state
+            )
 
             if len(args) > 6:
                 flags |= CommandFlags.EXTENDED_COMMAND
@@ -680,11 +724,15 @@ class WeirollPlanner:
                     ps.state.append(b"")
 
                 if (
-                    command.call.fragment.outputs and isDynamicType(command.call.fragment.outputs[0])
+                    command.call.fragment.outputs
+                    and isDynamicType(command.call.fragment.outputs[0])
                 ) or command.call.flags & CommandFlags.TUPLE_RETURN != 0:
                     ret |= 0x80
             elif command.type in [CommandType.RAWCALL, CommandType.SUBPLAN]:
-                if command.call.fragment.outputs and len(command.call.fragment.outputs) == 1:
+                if (
+                    command.call.fragment.outputs
+                    and len(command.call.fragment.outputs) == 1
+                ):
                     ret = 0xFE
 
             if flags & CommandFlags.EXTENDED_COMMAND == CommandFlags.EXTENDED_COMMAND:
@@ -731,7 +779,7 @@ class WeirollPlanner:
         state: list[str] = []
 
         # Prepopulate the state and state expirations with literals
-        for (literal, lastCommand) in literalVisibility.items():
+        for literal, lastCommand in literalVisibility.items():
             slot = len(state)
             state.append(literal)
             literalSlotMap[literal] = slot
@@ -749,3 +797,29 @@ class WeirollPlanner:
         encodedCommands = self._buildCommands(ps)
 
         return encodedCommands, state
+
+
+class _ABIEncoder(eth_abi.codec.BaseABICoder):
+    """
+    Wraps a registry to provide last-mile encoding functionality.
+    """
+
+    def encode_single(self, typ: TypeStr, arg: Any) -> bytes:
+        """
+        Encodes the python value ``arg`` as a binary value of the ABI type
+        ``typ``.
+
+        :param typ: The string representation of the ABI type that will be used
+            for encoding e.g. ``'uint256'``, ``'bytes[]'``, ``'(int,int)'``,
+            etc.
+        :param arg: The python value to be encoded.
+
+        :returns: The binary representation of the python value ``arg`` as a
+            value of the ABI type ``typ``.
+        """
+        encoder = self._registry.get_encoder(typ)
+
+        return encoder(arg)
+
+
+eth_abi_encode_single = _ABIEncoder(registry).encode_single
